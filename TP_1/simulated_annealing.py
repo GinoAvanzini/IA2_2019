@@ -6,7 +6,7 @@ from math import exp
 
 def update_T(temperature):
 
-    return temperature - 0.5
+    return temperature - 1
 
 
 def neighbours_annealing(current):
@@ -43,21 +43,31 @@ def energy(path):
     return distance
 
 
-def temple_simulado(productos):
+def temple_simulado(productos, t_inicial):
 
     current = productos
 
-    temp = 50
-
+    temp = t_inicial
+    
+    historic_best = [current, energy(current)]
+    
     while(1):
 
-        if (temp == 0): return current
+        if (temp == 0): return historic_best
 
         next = neighbours_annealing(current)
+        
+        current_energy = energy(current)
+        next_energy = energy(next)
+        
+        # Guardo el mejor camino histórico
+        if (next_energy <= historic_best[1]):
+            historic_best[0] = next
+            historic_best[1] = next_energy
+        
+        delta = next_energy - current_energy
 
-        delta = energy(next) - energy(current)
-
-        if (delta < 0):
+        if (delta < 0): # Mejor camino (menos distancia recorrida)
             current = next
         else: # delta is positive -> worse path
             prob = exp(-delta/temp)
@@ -101,10 +111,11 @@ if __name__ == "__main__":
     print(coordenadas)
     print(energy(coordenadas), "\n")
 
-    best_path = temple_simulado(coordenadas)
-
-    print(best_path)
-    print(energy(best_path))
+    best_path = temple_simulado(coordenadas, 200)
+    
+    print(best_path[0],"\n",best_path[1])
+    
+    
 
 
 
