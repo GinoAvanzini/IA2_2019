@@ -48,23 +48,23 @@ def temple_simulado(productos, t_inicial):
     current = productos
 
     temp = t_inicial
-    
+
     historic_best = [current, energy(current)]
-    
+
     while(1):
 
         if (temp == 0): return historic_best
 
         next = neighbours_annealing(current)
-        
+
         current_energy = energy(current)
         next_energy = energy(next)
-        
+
         # Guardo el mejor camino histórico
         if (next_energy <= historic_best[1]):
             historic_best[0] = next
             historic_best[1] = next_energy
-        
+
         delta = next_energy - current_energy
 
         if (delta < 0): # Mejor camino (menos distancia recorrida)
@@ -77,10 +77,22 @@ def temple_simulado(productos, t_inicial):
 
         temp = update_T(temp)
 
+def map_to_coord(pos_pick):
+    for i in pos_pick:
+        for fila in range(0, len(map)):
+            if i in map[fila]:
+                coordenadas.append([fila, map[fila].index(i)])
+
+                if (map[coordenadas[-1][0]][coordenadas[-1][1]] % 2 == 0):
+                    coordenadas[-1][1] -= 1
+                else:
+                    coordenadas[-1][1] += 1
+
+    return coordenadas
 
 if __name__ == "__main__":
 
-    n = 5
+    n = 10
     pos_pick = []
     coordenadas = []
 
@@ -92,15 +104,7 @@ if __name__ == "__main__":
 
     # Obtengo la coordenada del pasillo contiguo a cada uno de los lugares
     # del almacen con objetos.
-    for i in pos_pick:
-        for fila in range(0, len(map)):
-            if i in map[fila]:
-                coordenadas.append([fila, map[fila].index(i)])
-
-                if (map[coordenadas[-1][0]][coordenadas[-1][1]] % 2 == 0):
-                    coordenadas[-1][1] -= 1
-                else:
-                    coordenadas[-1][1] += 1
+    coordenadas = map_to_coord(pos_pick)
 
     # Entrar y salir por el mismo punto
     start = [0, 0]
@@ -112,10 +116,10 @@ if __name__ == "__main__":
     print(energy(coordenadas), "\n")
 
     best_path = temple_simulado(coordenadas, 200)
-    
+
     print(best_path[0],"\n",best_path[1])
-    
-    
+
+
 
 
 
