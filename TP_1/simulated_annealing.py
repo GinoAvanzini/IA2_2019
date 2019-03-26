@@ -78,6 +78,8 @@ def temple_simulado(productos, t_inicial):
         temp = update_T(temp)
 
 def map_to_coord(pos_pick):
+    coordenadas = []
+
     for i in pos_pick:
         for fila in range(0, len(map)):
             if i in map[fila]:
@@ -88,13 +90,18 @@ def map_to_coord(pos_pick):
                 else:
                     coordenadas[-1][1] += 1
 
+    # Entrar y salir por el mismo punto
+    start = [0, 0]
+    end = start
+    coordenadas.insert(0, start)
+    coordenadas.append(end)
+
     return coordenadas
 
 if __name__ == "__main__":
 
     n = 10
     pos_pick = []
-    coordenadas = []
 
     # Generacion de picking en posiciones random
     for i in range(0, n):
@@ -105,12 +112,6 @@ if __name__ == "__main__":
     # Obtengo la coordenada del pasillo contiguo a cada uno de los lugares
     # del almacen con objetos.
     coordenadas = map_to_coord(pos_pick)
-
-    # Entrar y salir por el mismo punto
-    start = [0, 0]
-    end = start
-    coordenadas.insert(0, start)
-    coordenadas.append(end)
 
     print(coordenadas)
     print(energy(coordenadas), "\n")

@@ -176,25 +176,6 @@ def verify_position(position):
 # EJECUCIÓN
 if __name__ == "__main__":
 
-    #almacen = list(range(32));
-
-    #for i in range(0, 32):
-        #almacen[i] = 1
-
-    #map = [ [0, 0, 0, 0, 0, 0, 0],
-            #[0, almacen[0], almacen[1], 0, almacen[16], almacen[17], 0],
-            #[0, almacen[2], almacen[3], 0, almacen[18], almacen[19], 0],
-            #[0, almacen[4], almacen[5], 0, almacen[20], almacen[21], 0],
-            #[0, almacen[6], almacen[7], 0, almacen[22], almacen[23], 0],
-            #[0, 0, 0, 0, 0, 0, 0],
-            #[0, almacen[8], almacen[9], 0, almacen[24], almacen[25], 0],
-            #[0, almacen[10], almacen[11], 0, almacen[26], almacen[27], 0],
-            #[0, almacen[12], almacen[13], 0, almacen[28], almacen[29], 0],
-            #[0, almacen[14], almacen[15], 0, almacen[30], almacen[31], 0],
-            #[0, 0, 0, 0, 0, 0, 0] ]
-
-    #print("Begin")
-
     initial_state = [1, 0]
 
     end_state = [7, 0]
