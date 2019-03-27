@@ -4,7 +4,7 @@ from numpy.random import choice
 from simulated_annealing import temple_simulado, map_to_coord, neighbours_annealing, distance
 
 N_POB = 20
-MAX_LENGHT = 16
+MAX_LENGHT = 31
 T_0 = 300
 
 
@@ -14,30 +14,34 @@ def crossover(ind1, ind2):
     Función de crossover entre individuos. Recibe las lista del estado de cada indiviuo y el modo en que se desea realizar el crossover:
     Cruce de orden.
     """
-    c1 = randint(1, len(ind1)-2)
-    c2 = randint(1, len(ind1)-2)
+
+    dim = len(ind1)
+
+    c1 = randint(1, dim-2)
+    c2 = randint(1, dim-2)
 
     while (c2 == c1): # Verificación para que sean distintos los puntos de cruce
-        c2 = randint(1, len(ind1)-2)
+        c2 = randint(1, dim-2)
 
     if (c2 < c1): # Ordenar los puntos de cruce de menor a mayor
         aux = c1
         c1 = c2
         c2 = aux
 
-    ans1 = [-1] * c1 + ind2[c1:c2] + [-1] * (len(ind1) - c2)
-    ans2 = [-1] * c1 + ind1[c1:c2] + [-1] * (len(ind1) - c2)
+    ans1 = [-1] * c1 + ind2[c1:c2+1] + [-1] * (dim - c2 - 1)
+    ans2 = [-1] * c1 + ind1[c1:c2+1] + [-1] * (dim - c2 - 1)
 
-    for i in range(-c2+1, c1):
-        if (ind1[i] in ans1):
-            continue
-        else:
-            ans1[i] = ind1[i]
+    j = -dim+c2+1
+    n = j
+    for i in range(0, dim):
 
-        if (ind2[i] in ans2):
-            continue
-        else:
-            ans2[i] = ind2[i]
+        if (not (ind1[i] in ans1)):
+            ans1[j] = ind1[i]
+            j += 1
+
+        if (not (ind2[i] in ans2)):
+            ans2[n] = ind2[i]
+            n += 1
 
     return ans1, ans2
 
@@ -58,15 +62,14 @@ def fitness(ind):
 
 def generate_ind():
     individuo = {}
-    aux = list(range(0, 31))
+    aux = list(range(0, MAX_LENGHT))
     for i in range(0, MAX_LENGHT):
         item = choice(aux)
         aux.remove(item)
         individuo[i] = item
 
-    # fit = fitness(individuo)
-
     return individuo
+
 
 if __name__ == "__main__":
     start = []
