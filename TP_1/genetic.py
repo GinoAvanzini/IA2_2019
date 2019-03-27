@@ -11,8 +11,7 @@ T_0 = 300
 # [INDEPENDIENTE DEL PROBLEMA]
 def crossover(ind1, ind2):
     """
-    Función de crossover entre individuos. Recibe las lista del estado de cada indiviuo y el modo en que se desea realizar el crossover:
-    Cruce de orden.
+    Función de crossover entre individuos. Recibe las lista del estado de cada indiviuo. Crossover por *cruce de orden*.
     """
 
     dim = len(ind1)
@@ -44,6 +43,32 @@ def crossover(ind1, ind2):
             n += 1
 
     return ans1, ans2
+
+
+# [INDEPENDIENTE DEL PROBLEMA]
+def mutacion(ind):
+    """
+    Función de mutación de individuos. Recibe las lista del estado del indiviuo. Mutación por *inserción*.
+    """
+
+    dim = len(ind)
+
+    c1 = randint(0, dim-1)
+    c2 = randint(0, dim-1)
+
+    while (c2 == c1): # Verificación para que sean distintos los puntos de cruce
+        c2 = randint(0, dim-1)
+
+    if (c2 < c1): # Ordenar los puntos de cruce de menor a mayor
+        aux = c1
+        c1 = c2
+        c2 = aux
+
+    aux = ind[c2]
+    ind.remove(ind[c2])
+    ind.insert(c1+1, aux)
+
+    return ind
 
 
 def genetic(init):
@@ -82,3 +107,7 @@ if __name__ == "__main__":
     ans1, ans2 = crossover(list(start[0].values()), list(start[1].values()))
     print(ans1, fitness(list(ans1)))
     print(ans2, fitness(list(ans2)))
+
+    print("org ", ans1)
+    ans1 = mutacion(ans1)
+    print("mut ", ans1)
