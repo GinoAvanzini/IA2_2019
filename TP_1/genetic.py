@@ -1,12 +1,15 @@
 from random import randint, choices
 from numpy.random import choice
+from progressBar import printProgressBar
 
 from simulated_annealing import temple_simulado, map_to_coord, neighbours_annealing, distance
 
-N_POB = 10
+N_PEDIDO = 5
+
+N_POB = 5
 MAX_LENGHT = 31
-T_0 = 100
-MAX_GEN = 10
+T_0 = 50
+MAX_GEN = 5
 
 MUT_PROB = 30
 
@@ -78,9 +81,10 @@ def mutacion(ind):
 
 
 # [INDEPENDIENTE DEL PROBLEMA]
-def genetic(pob):
+def genetic(pob, conjunto):
 
     count = 0
+    printProgressBar(0, MAX_GEN)
     while (count < MAX_GEN):
 
         # Cálculo de fitness de cada individuo de la población
@@ -88,7 +92,7 @@ def genetic(pob):
         total_fit = 0
 
         for ind in pob:
-            value = fitness(ind)
+            value = fitness(ind, conjunto)
             fit.append(value)
             total_fit += value
 
@@ -118,12 +122,13 @@ def genetic(pob):
         pob = new_pob
 
         count += 1
+        printProgressBar(count, MAX_GEN)
 
     # Selección del mejor de la población
     fit = []
 
     for ind in pob:
-        value = fitness(ind)
+        value = fitness(ind, conjunto)
         fit.append(value)
 
     max_index = 0
@@ -139,12 +144,20 @@ def genetic(pob):
 #-------------------------------------------------------------------------------
 
 # [DEPENDIENTE DEL PROBLEMA]
-def fitness(ind):
+def fitness(ind, conjunto):
     """
     Función de fitness. Recibe como parámetro el estado y devuelve el valor de fitness absoluto.
     Depende del problema, en este caso lo da el algoritmo de recocido simulado.
     """
-    path, cost = temple_simulado(map_to_coord(ind), T_0, neighbours_annealing, distance)
+
+    for orden_prod in conjunto:
+        orden_estant = []
+
+        for prod in orden_prod:
+            orden_estant.append(ind.index(prod))
+
+        path, cost = temple_simulado(map_to_coord(orden_estant), T_0, neighbours_annealing, distance)
+
     return cost
 
 
@@ -165,9 +178,25 @@ def generate_ind():
 
 
 if __name__ == "__main__":
+
+    # Generar un conjunto de órdenes
+    # conjunto = []
+    # for i in range(0, N_PEDIDO):
+    #     dim = randint(2, MAX_LENGHT-1)
+    #     aux = []
+    #     for j in range(0, dim):
+    #         aux.append(randint(0, MAX_LENGHT-1))
+    #     conjunto.append(aux)
+    #     print(aux)
+
+    conjunto = []
+    for i in range(0, 10):
+        conjunto.append(list(range(0, 30)))
+        print(conjunto[i])
+
     start = []
     for i in range(0, N_POB):
         start.append(generate_ind())
 
-    best = genetic(start)
+    best = genetic(start, conjunto)
     print(best)
