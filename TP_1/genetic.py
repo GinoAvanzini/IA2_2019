@@ -4,14 +4,14 @@ from progressBar import printProgressBar
 
 from simulated_annealing import temple_simulado, map_to_coord, neighbours_annealing, distance
 
-N_PEDIDO = 5
+N_PEDIDO = 5 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
-N_POB = 5
-MAX_LENGHT = 31
-T_0 = 50
-MAX_GEN = 5
+N_POB = 5 # Cantidad de individuos en la población
+MAX_LENGHT = 31 # Cantidad de estanterías
+T_0 = 50 # Temperatura inicial a la que inicia el algoritmo de temple simulado
+MAX_GEN = 5 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
 
-MUT_PROB = 30
+MUT_PROB = 30 # Probabilidad de mutar de un individuo, de 0 a 100%
 
 
 # [INDEPENDIENTE DEL PROBLEMA]
@@ -37,7 +37,7 @@ def cross_points(dim):
 # [INDEPENDIENTE DEL PROBLEMA]
 def crossover(ind1, ind2):
     """
-    Función de crossover entre individuos. Recibe las lista del estado de cada indiviuo. Crossover por *cruce de orden*.
+    Función de crossover entre individuos. Recibe las lista del estado de cada indiviuo. Crossover por *cruce de orden*. Devuelve los dos individuos "hijos" generados.
     """
 
     dim = len(ind1)
@@ -66,7 +66,7 @@ def crossover(ind1, ind2):
 # [INDEPENDIENTE DEL PROBLEMA]
 def mutacion(ind):
     """
-    Función de mutación de individuos. Recibe las lista del estado del indiviuo. Mutación por *inserción*.
+    Función de mutación de individuos. Recibe las lista del estado del indiviuo. Mutación por *inserción*. Devuelve al individuo mutado.
     """
 
     dim = len(ind)
@@ -79,15 +79,22 @@ def mutacion(ind):
 
     return ind
 
+#-------------------------------------------------------------------------------
+#   MODELADO DEL PROBLEMA
+#-------------------------------------------------------------------------------
 
-# [INDEPENDIENTE DEL PROBLEMA]
+# [PARCIALMENTE DEPENDIENTE DEL PROBLEMA]
 def genetic(pob, conjunto):
+    """
+    Función principal de la implementación del algoritmo genético. Recibe como parámetros la población inicial y una variable "conjunto", exclusiva del modelado, que es el conjunto de pedidos para los que se desea optimizar el layout del almacen.
+    La función devuelve el mejor indiviuo luego de MAX_GEN generaciones.
+    """
 
     count = 0
     printProgressBar(0, MAX_GEN)
     while (count < MAX_GEN):
 
-        # Cálculo de fitness de cada individuo de la población
+        # Cálculo de fitness de cada individuo de la población. La lista fit tendrá el valor absoluto de fitness, y la lista weight el valor relativo de fitness al resto de la población.
         fit = []
         total_fit = 0
 
@@ -101,15 +108,16 @@ def genetic(pob, conjunto):
         for item in fit:
             weight.append(1 - (item / total_fit))
 
+        # Evolución de la población
         new_pob = []
         while (len(new_pob) < N_POB):
 
             # Selección de padres por peso de fitness: https://en.wikipedia.org/wiki/Fitness_proportionate_selection
             [ind1, ind2] = choices(population=pob, k=2, weights=weight)
 
-            s1, s2 = crossover(ind1, ind2)
+            s1, s2 = crossover(ind1, ind2) # Crossover
 
-
+            # Mutación
             if (randint(0, 100) < MUT_PROB):
                 s1 = mutacion(s1)
 
@@ -119,12 +127,13 @@ def genetic(pob, conjunto):
             new_pob.append(s1)
             new_pob.append(s2)
 
-        pob = new_pob
+        pob = new_pob # Actualización de la población
 
         count += 1
         printProgressBar(count, MAX_GEN)
 
     # Selección del mejor de la población
+    # Esto podría realizarse para cada generación, y no solo quedarse con el último mejor. SImilar a lo que se hizo en el temple simulado.
     fit = []
 
     for ind in pob:
@@ -139,26 +148,23 @@ def genetic(pob, conjunto):
     return pob[max_index]
 
 
-#-------------------------------------------------------------------------------
-#   MODELADO DEL PROBLEMA
-#-------------------------------------------------------------------------------
-
 # [DEPENDIENTE DEL PROBLEMA]
 def fitness(ind, conjunto):
     """
-    Función de fitness. Recibe como parámetro el estado y devuelve el valor de fitness absoluto.
-    Depende del problema, en este caso lo da el algoritmo de recocido simulado.
+    Función de fitness. Recibe como parámetro el individuo cuyo fitness se desea calcular, y un segundo parámetro "conjunto" que corresponde al conjunto de ordenes para las cuales se desea optimizar el layout del almacen. La función devuelve el valor de fitness absoluto.
+    Depende del modelo del problema, en este caso lo da el algoritmo de recocido simulado.
     """
 
     for orden_prod in conjunto:
         orden_estant = []
-
+        sum = 0
         for prod in orden_prod:
             orden_estant.append(ind.index(prod))
 
         path, cost = temple_simulado(map_to_coord(orden_estant), T_0, neighbours_annealing, distance)
+        sum += cost
 
-    return cost
+    return sum / len(conjunto)
 
 
 # [DEPENDIENTE DEL PROBLEMA]
