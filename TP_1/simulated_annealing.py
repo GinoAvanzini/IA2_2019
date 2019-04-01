@@ -127,13 +127,9 @@ def map_to_coord(pos_pick):
 if __name__ == "__main__":
 
     n = 10
-    pos_pick = []
 
     # Generacion de picking en posiciones random
-    for i in range(0, n):
-        pos_pick.append(randint(0, 31))
-        # a = pos_pick[-1]
-        # almacen[a] = a
+    pos_pick = [randint(0, 31) for i in range(0, n)]
 
     # Obtengo la coordenada del pasillo contiguo a cada uno de los lugares
     # del almacen con objetos.
