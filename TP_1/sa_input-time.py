@@ -37,7 +37,7 @@ if __name__ == "__main__":
             time_avg = time_avg/ITER
             time_exec.append(time_avg)
         
-        writer = csv.writer(input_file, quoting=csv.QUOTE_ALL)
+        writer = csv.writer(input_file, quoting=csv.QUOTE_NONE)
         
         writer.writerow(['n_inputs', 'avg_time'])
         
