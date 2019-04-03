@@ -4,15 +4,16 @@ from progressBar import printProgressBar
 
 from simulated_annealing import temple_simulado, map_to_coord, neighbours_annealing, distance
 
-N_PEDIDO = 5 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
+N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
-N_POB = 5 # Cantidad de individuos en la población
+N_POB = 10 # Cantidad de individuos en la población
 MAX_LENGHT = 31 # Cantidad de estanterías
-T_0 = 50 # Temperatura inicial a la que inicia el algoritmo de temple simulado
-MAX_GEN = 5 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
+T_0 = 200 # Temperatura inicial a la que inicia el algoritmo de temple simulado
+MAX_GEN = 50 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
 
-MUT_PROB = 30 # Probabilidad de mutar de un individuo, de 0 a 100%
+MUT_PROB = 10 # Probabilidad de mutar de un individuo, de 0 a 100%
 
+check = [] # Verificación de reducción de fitness
 
 # [INDEPENDIENTE DEL PROBLEMA]
 def cross_points(dim):
@@ -79,6 +80,23 @@ def mutacion(ind):
 
     return ind
 
+
+# [INDEPENDIENTE DEL PROBLEMA]
+def seleccion(pob, weight):
+    """
+    Función para la selección de padres dentro de la población. Recibe una lista con los individuos de la población, y un segundo parámetro con una lista de los "pesos" (o fitness relativo) de los respectivos individuos.
+    La forma de elección es estilo roulette wheel selection, donde los individuos tienen mayor probabilidad de ser elegidos (distribución de probabilidad uniforme) cuanto mayor sea su peso.
+    La función devuelve los dos individuos elegidos.
+    """
+    flag = True
+    while (flag):
+        [ind1, ind2] = choices(population=pob, k=2, weights=weight)
+        if (ind1 != ind2):
+            flag = False
+
+    return [ind1, ind2]
+
+
 #-------------------------------------------------------------------------------
 #   MODELADO DEL PROBLEMA
 #-------------------------------------------------------------------------------
@@ -105,6 +123,9 @@ def genetic(pob, conjunto):
 
             weight = []
 
+        check.append(total_fit/len(fit))
+
+
         for item in fit:
             weight.append(1 - (item / total_fit))
 
@@ -113,7 +134,7 @@ def genetic(pob, conjunto):
         while (len(new_pob) < N_POB):
 
             # Selección de padres por peso de fitness: https://en.wikipedia.org/wiki/Fitness_proportionate_selection
-            [ind1, ind2] = choices(population=pob, k=2, weights=weight)
+            [ind1, ind2] = seleccion(pob, weight)
 
             s1, s2 = crossover(ind1, ind2) # Crossover
 
@@ -186,7 +207,7 @@ def generate_ind():
 if __name__ == "__main__":
 
     # Generar un conjunto de órdenes
-    # conjunto = []
+    conjunto = []
     # for i in range(0, N_PEDIDO):
     #     dim = randint(2, MAX_LENGHT-1)
     #     aux = []
@@ -195,10 +216,12 @@ if __name__ == "__main__":
     #     conjunto.append(aux)
     #     print(aux)
 
-    conjunto = []
-    for i in range(0, 10):
-        conjunto.append(list(range(0, 30)))
-        print(conjunto[i])
+    # conjunto = []
+    # for i in range(0, 10):
+    #     conjunto.append(list(range(0, 30)))
+    #     print(conjunto[i])
+
+    conjunto.append(list(range(0, 20)))
 
     start = []
     for i in range(0, N_POB):
@@ -206,3 +229,4 @@ if __name__ == "__main__":
 
     best = genetic(start, conjunto)
     print(best)
+    print(check)
