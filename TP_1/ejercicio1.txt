@@ -1,0 +1,78 @@
+#+TITLE: Trabajo práctico N°1: Búsqueda y Optimización
+#+AUTHOR: Avanzini, Gino; Cabrino, Emiliano; Fernández, Gonzalo; Cantaloube, Adrián
+
+* Ejercicio N°1:
+
+En los problemas enunciados abajo
+● Qué algoritmo/s utilizaría en cada caso. Justifique.
+● Defina el problema (estado inicial, modelo de transición, prueba de meta, funciones heurísticas si
+aplican, función de costo/calidad)
+● Estime la complejidad del problema y del algoritmo
+
+**Problemas**
+
+    a. Diseño de un proceso de manufactura
+
+Es un problema de planificación: necesitamos encontrar el plan de manufactura. La planificación nos permite crear dicho
+plan describiendo un estado inicial y un objetivo, siendo ambos fijados por el encargado de la manufactura, y las tareas
+que se podrán llevar a cabo. Cada tarea lleva consigo precondiciones que se deberán cumplir para que esta tarea se
+lleve a cabo y el planificador deberá diseñar el plan para que la manufactura sea correcta y lo mas fluida posible
+describiendo el modelo de transición. Al finalizar el algoritmo se calcularán costos de dinero y tiempo de manufactura y
+se comprobará si la planificación cumple con las expectativas. De otra forma se deberá reconstruir para buscar una mejor
+solución.
+
+El algoritmo es de planificación por lo que nos basaremos en algoritmos genéticos (búsqueda local). La programación
+se estima que no será difícil ya a priori nos damos una idea de lo que debemos hacer en el proceso.
+
+    b. Planificación de órdenes de fabricación
+
+
+
+    c. Encontrar la ubicación óptima de aerogeneradores en un parque eólico
+
+Es un problema de optimización:* Se busca maximizar la energía generada por un determinado número de aerogeneradores
+en un campo eólico dada información sobre el viento en la zona. Para lograrlo hay que determinar la mejor disposición
+de los generadores en el parque.
+
+La resolución del problema se puede encasillar dentro de la familia de algoritmos de búsqueda continua. Entre ellos se
+encuentran, por ejemplo, los algoritmos genéticos y de recocido simulado.
+
+El estado inicial del problema es obtener un configuración aleatoria de los generadores en el espacio discretizado del
+campo. El modelo de transición consiste en reubicar alguno de los aerogeneradores en otra posición del campo y
+proseguir con el algoritmo, evaluando si el nuevo estado produce una mejora o no con la función objetivo.
+El test objetivo es una función que dada la información del viento en la zona, valora qué tan buena es la
+distribución de generadores. La heurística utilizada en el algoritmo será la función de tipo
+Arrhenius $\exp{-\frac{\delta E}{T}}$, que dará la probabilidad de aceptar un estado o no. No hay función de
+costo ya que no hay costo en pasar del estado actual al vecino.
+
+    d. Planificar trayectorias de un brazo robotizado con 6 grados de libertad
+
+Es un problema de Planificación y/o optimización: Se busca una combinación entre ambas, planificación para conocer las
+acciones que debe tomar, y optimización para llegar del estado inicial al final con el menor gasto posible. Ambas nos
+ayudarán a tomar decisiones en tiempo real ya que trabajan en conjunto.
+
+El estado inicial y final son descriptas por el operario y no generadas aleatoriamente.
+
+    e. Diseño de un generador
+
+
+
+    f. Definición de una secuencia de ensamblado óptima
+
+
+
+    g. Planificación del proyecto de una obra
+
+
+
+
+
+
+
+- Diseño de un proceso de manufactura.
+- Planificación de órdenes de fabricación.
+- Encontrar la ubicación óptima de aerogeneradores en un parque eólico.
+
+
+
+- Planificar trayectorias de un brazo robotizado con 6 grados de libertad.
