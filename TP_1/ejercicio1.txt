@@ -47,11 +47,15 @@ costo ya que no hay costo en pasar del estado actual al vecino.
 
     d. Planificar trayectorias de un brazo robotizado con 6 grados de libertad
 
-Es un problema de Planificación y/o optimización: Se busca una combinación entre ambas, planificación para conocer las
+Es un problema de planificación y/o optimización: Se busca una combinación entre ambas, planificación para conocer las
 acciones que debe tomar, y optimización para llegar del estado inicial al final con el menor gasto posible. Ambas nos
 ayudarán a tomar decisiones en tiempo real ya que trabajan en conjunto.
 
-El estado inicial y final son descriptas por el operario y no generadas aleatoriamente.
+El estado inicial y final son descriptas por el operario y no generadas aleatoriamente. Con el modelo de transición
+vemos el movimiento de los eslabones del robot para llegar al próximo estado (punto discretizado de la trayectoria).
+Podríamos usar la heurística del ejercicio 2)a de este práctico (A*) para llegar al objetivo. En este caso no
+podríamos usar algoritmos de busqueda local ya que no solo debemos llegar al estado final, sino que necesitamos
+seguir una trayectoria establecida.
 
     e. Diseño de un generador
 
@@ -59,20 +63,12 @@ El estado inicial y final son descriptas por el operario y no generadas aleatori
 
     f. Definición de una secuencia de ensamblado óptima
 
+Es un proceso de planificación. El ensamblado de una pieza no siempre es único por lo que el plan tampoco lo será.
+Lo importante en este proceso es encontrar al menos una secuencia correcta de ordenes para ensamblar las piezas.
 
+El estado inicial podría no ser único pero si acotado. El estado final si es único. El modelo de transición
+consistirá entonces en seleccionar, de acuerdo a las restricciones impuestas en el algoritmo para cada pieza,
+un orden de ensamblado. Este deberá ser correcto y sin backtracking (que en ninguna instancia el algoritmo deba
+retirar una pieza ensamblada para colocar otra). La meta será el ensamble de todas las piezas.
 
     g. Planificación del proyecto de una obra
-
-
-
-
-
-
-
-- Diseño de un proceso de manufactura.
-- Planificación de órdenes de fabricación.
-- Encontrar la ubicación óptima de aerogeneradores en un parque eólico.
-
-
-
-- Planificar trayectorias de un brazo robotizado con 6 grados de libertad.
