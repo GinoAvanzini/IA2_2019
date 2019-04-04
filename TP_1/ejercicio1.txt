@@ -54,7 +54,7 @@ ayudarán a tomar decisiones en tiempo real ya que trabajan en conjunto.
 El estado inicial y final son descriptas por el operario y no generadas aleatoriamente. Con el modelo de transición
 vemos el movimiento de los eslabones del robot para llegar al próximo estado (punto discretizado de la trayectoria).
 Podríamos usar la heurística del ejercicio 2)a de este práctico (A*) para llegar al objetivo. En este caso no
-podríamos usar algoritmos de busqueda local ya que no solo debemos llegar al estado final, sino que necesitamos
+podríamos usar algoritmos de búsqueda local ya que no solo debemos llegar al estado final, sino que necesitamos
 seguir una trayectoria establecida.
 
     e. Diseño de un generador
