@@ -6,10 +6,10 @@ from simulated_annealing import temple_simulado, map_to_coord, neighbours_anneal
 
 N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
-N_POB = 10 # Cantidad de individuos en la población
-MAX_LENGHT = 31 # Cantidad de estanterías
-T_0 = 200 # Temperatura inicial a la que inicia el algoritmo de temple simulado
-MAX_GEN = 50 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
+N_POB = 16 # Cantidad de individuos en la población
+MAX_LENGHT = 32 # Cantidad de estanterías
+T_0 = 100 # Temperatura inicial a la que inicia el algoritmo de temple simulado
+MAX_GEN = 20 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
 
 MUT_PROB = 10 # Probabilidad de mutar de un individuo, de 0 a 100%
 
@@ -153,18 +153,19 @@ def genetic(pob, conjunto):
         count += 1
         printProgressBar(count, MAX_GEN)
 
-    # Selección del mejor de la población
-    # Esto podría realizarse para cada generación, y no solo quedarse con el último mejor. SImilar a lo que se hizo en el temple simulado.
-    fit = []
+        # Selección del mejor de la población
+        # Esto podría realizarse para cada generación, y no solo quedarse con el último mejor. SImilar a lo que se hizo en el temple simulado.
+        fit = []
 
-    for ind in pob:
-        value = fitness(ind, conjunto)
-        fit.append(value)
+        for ind in pob:
+            value = fitness(ind, conjunto)
+            fit.append(value)
 
-    max_index = 0
-    for i in range(0, len(pob)):
-        if (fit[i] < fit[max_index]):
-            max_index = i
+        max_index = 0
+        for i in range(0, len(pob)):
+            if (fit[i] < fit[max_index]):
+                max_index = i
+        print(fit[max_index])
 
     return pob[max_index]
 
@@ -207,7 +208,7 @@ def generate_ind():
 if __name__ == "__main__":
 
     # Generar un conjunto de órdenes
-    conjunto = []
+    # conjunto = [[18, 7, 32, 24, 30, 12, 16], [14, 9, 5, 32, 9], [29, 29, 1, 15, 6, 13, 30, 9, 18], [16, 27, 9, 20, 30, 20, 28], [13, 9, 26, 20, 31, 11], [32, 12, 24, 1, 10, 24, 10, 16]]
     # for i in range(0, N_PEDIDO):
     #     dim = randint(2, MAX_LENGHT-1)
     #     aux = []
@@ -216,12 +217,22 @@ if __name__ == "__main__":
     #     conjunto.append(aux)
     #     print(aux)
 
-    # conjunto = []
+    conjunto = []
     # for i in range(0, 10):
     #     conjunto.append(list(range(0, 30)))
     #     print(conjunto[i])
 
-    conjunto.append(list(range(0, 20)))
+    # Test Franco Palau
+    # [array([18, 7, 32, 24, 30, 12, 16]), array([14, 9, 5, 32, 9]), array([29, 29, 1, 15, 6, 13, 30, 9, 18]), array([16, 27, 9, 20, 30, 20, 28]), array([13, 9, 26, 20, 31, 11]), array([32, 12, 24, 1, 10, 24, 10, 16])]
+
+    conjunto.append(list(range(30, 20, -1)))
+
+
+    for i in range(0, len(conjunto)):
+        for j in range(0, len(conjunto[i])):
+            conjunto[i][j] -= 1
+
+    print(conjunto)
 
     start = []
     for i in range(0, N_POB):
