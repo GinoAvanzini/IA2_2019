@@ -108,6 +108,9 @@ def genetic(pob, conjunto):
     La función devuelve el mejor indiviuo luego de MAX_GEN generaciones.
     """
 
+    aux_fit = fitness(pob[0], pob)
+    best = [pob[0], aux_fit]
+
     count = 0
     printProgressBar(0, MAX_GEN)
     while (count < MAX_GEN):
@@ -167,7 +170,10 @@ def genetic(pob, conjunto):
                 max_index = i
         print(fit[max_index])
 
-    return pob[max_index]
+        if (fit[max_index] < best[1]):
+            best = [pob[max_index], fit[max_index]]
+
+    return best
 
 
 # [DEPENDIENTE DEL PROBLEMA]
@@ -183,7 +189,7 @@ def fitness(ind, conjunto):
         for prod in orden_prod:
             orden_estant.append(ind.index(prod))
 
-        path, cost = temple_simulado(map_to_coord(orden_estant), T_0, neighbours_annealing, distance)
+        _, cost = temple_simulado(map_to_coord(orden_estant), T_0, neighbours_annealing, distance)
         sum += cost
 
     return sum / len(conjunto)
@@ -226,11 +232,6 @@ if __name__ == "__main__":
     # [array([18, 7, 32, 24, 30, 12, 16]), array([14, 9, 5, 32, 9]), array([29, 29, 1, 15, 6, 13, 30, 9, 18]), array([16, 27, 9, 20, 30, 20, 28]), array([13, 9, 26, 20, 31, 11]), array([32, 12, 24, 1, 10, 24, 10, 16])]
 
     conjunto.append(list(range(30, 20, -1)))
-
-
-    for i in range(0, len(conjunto)):
-        for j in range(0, len(conjunto[i])):
-            conjunto[i][j] -= 1
 
     print(conjunto)
 
