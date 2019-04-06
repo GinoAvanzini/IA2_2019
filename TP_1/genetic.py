@@ -6,9 +6,9 @@ from simulated_annealing import temple_simulado, map_to_coord, neighbours_anneal
 
 N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
-N_POB = 16 # Cantidad de individuos en la población
+N_POB = 6 # Cantidad de individuos en la población
 MAX_LENGHT = 32 # Cantidad de estanterías
-T_0 = 100 # Temperatura inicial a la que inicia el algoritmo de temple simulado
+T_0 = 50 # Temperatura inicial a la que inicia el algoritmo de temple simulado
 MAX_GEN = 20 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
 
 MUT_PROB = 10 # Probabilidad de mutar de un individuo, de 0 a 100%
@@ -228,12 +228,29 @@ if __name__ == "__main__":
     #     conjunto.append(list(range(0, 30)))
     #     print(conjunto[i])
 
-    # Test Franco Palau
+    # Test Franco Pylau
     # [array([18, 7, 32, 24, 30, 12, 16]), array([14, 9, 5, 32, 9]), array([29, 29, 1, 15, 6, 13, 30, 9, 18]), array([16, 27, 9, 20, 30, 20, 28]), array([13, 9, 26, 20, 31, 11]), array([32, 12, 24, 1, 10, 24, 10, 16])]
 
-    conjunto.append(list(range(30, 20, -1)))
-
-    print(conjunto)
+    #conjunto.append(list(range(30, 20, -1)))
+    
+    prob = []
+    
+    estant = [i for i in range(0, MAX_LENGHT)]
+    
+    for i in range(0, 25):
+        prob.append(0.1)
+    
+    for i in range(25, MAX_LENGHT):
+        prob.append(0.5)
+    
+    for i in range(0, 8):
+        conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
+        
+        
+    
+    #print(conjunto)
+    
+    #exit()
 
     start = []
     for i in range(0, N_POB):
