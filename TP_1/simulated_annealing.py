@@ -65,15 +65,19 @@ def neighbours_annealing(current):
     pos = []
 
     # Generacion de posicion de componentes a intercambiar
-    i = 0
-    while(i < 2):
-        pos.append(randint(1, len(current) - 2)) # Para no tomar el end o start
-        if (i != 0 and pos[i] == pos[i-1]):
-            # Verifico que no sean iguales. Si no podría no haber intecambio
-            i -= 1
-            pos.pop()
-        i += 1
-
+    if len(current) > 3:  # len() tiene complejidad O(1), se guarda como atributo en memoria
+        i = 0
+        while(i < 2):
+            pos.append(randint(1, len(current) - 2)) # Para no tomar el end o start
+            if (i != 0 and pos[i] == pos[i-1]):
+                # Verifico que no sean iguales. Si no podría no haber intecambio
+                i -= 1
+                pos.pop()
+            i += 1
+    else:
+        # Ejecución trivial, solo hay un item para ordenar
+        return current
+    
     # Swap de componentes
     vecino = list(current)
 
