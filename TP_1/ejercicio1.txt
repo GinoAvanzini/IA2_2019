@@ -13,31 +13,33 @@ aplican, función de costo/calidad)
 
     a. Diseño de un proceso de manufactura
 
-Es un problema de planificación: necesitamos encontrar el plan de manufactura. La planificación nos permite crear dicho
+  Es un problema de planificación: necesitamos encontrar el plan de manufactura. La planificación nos permite crear dicho
 plan describiendo un estado inicial y un objetivo, siendo ambos fijados por el encargado de la manufactura, y las tareas
 que se podrán llevar a cabo. Cada tarea lleva consigo precondiciones que se deberán cumplir para que esta tarea se
 lleve a cabo y el planificador deberá diseñar el plan para que la manufactura sea correcta y lo mas fluida posible
 describiendo el modelo de transición. Al finalizar el algoritmo se calcularán costos de dinero y tiempo de manufactura y
 se comprobará si la planificación cumple con las expectativas. De otra forma se deberá reconstruir para buscar una mejor
 solución.
-
-El algoritmo es de planificación por lo que nos basaremos en algoritmos genéticos (búsqueda local). La programación
+  El algoritmo es de planificación por lo que nos basaremos en algoritmos genéticos (búsqueda local). La programación
 se estima que no será difícil ya a priori nos damos una idea de lo que debemos hacer en el proceso.
 
     b. Planificación de órdenes de fabricación
 
-
+  Es un problema de planificación. Cuando las empresas trabajan con pedidos es común que estos lleguen todos los días de forma
+desorganizada. Es necesario agruparlos para que la producción se lleve a cabo de forma simultánea. Por ejemplo: llegaron pedidos
+de un mismo modelo, de clientes diferentes, ellos pueden ser cortados y fabricados al mismo tiempo. Con ese agrupamiento se estará
+elaborando una única orden e fabricación. Ahorrando tiempo al evitar un seccionamiento innecesario.
+  El orden del plan y el ahorro a la hora de planificar se pueden basar según el valor de facturación o según el plazo y cantidad de
+productos.
 
     c. Encontrar la ubicación óptima de aerogeneradores en un parque eólico
 
-Es un problema de optimización:* Se busca maximizar la energía generada por un determinado número de aerogeneradores
+  Es un problema de optimización:* Se busca maximizar la energía generada por un determinado número de aerogeneradores
 en un campo eólico dada información sobre el viento en la zona. Para lograrlo hay que determinar la mejor disposición
 de los generadores en el parque.
-
-La resolución del problema se puede encasillar dentro de la familia de algoritmos de búsqueda continua. Entre ellos se
+  La resolución del problema se puede encasillar dentro de la familia de algoritmos de búsqueda continua. Entre ellos se
 encuentran, por ejemplo, los algoritmos genéticos y de recocido simulado.
-
-El estado inicial del problema es obtener un configuración aleatoria de los generadores en el espacio discretizado del
+  El estado inicial del problema es obtener un configuración aleatoria de los generadores en el espacio discretizado del
 campo. El modelo de transición consiste en reubicar alguno de los aerogeneradores en otra posición del campo y
 proseguir con el algoritmo, evaluando si el nuevo estado produce una mejora o no con la función objetivo.
 El test objetivo es una función que dada la información del viento en la zona, valora qué tan buena es la
@@ -45,13 +47,12 @@ distribución de generadores. La heurística utilizada en el algoritmo será la 
 Arrhenius $\exp{-\frac{\delta E}{T}}$, que dará la probabilidad de aceptar un estado o no. No hay función de
 costo ya que no hay costo en pasar del estado actual al vecino.
 
-    d. Planificar trayectorias de un brazo robotizado con 6 grados de libertad
+    d. Planificar trayectorias de un brazo robótico con 6 grados de libertad
 
-Es un problema de planificación y/o optimización: Se busca una combinación entre ambas, planificación para conocer las
+  Es un problema de planificación y/o optimización: Se busca una combinación entre ambas, planificación para conocer las
 acciones que debe tomar, y optimización para llegar del estado inicial al final con el menor gasto posible. Ambas nos
 ayudarán a tomar decisiones en tiempo real ya que trabajan en conjunto.
-
-El estado inicial y final son descriptas por el operario y no generadas aleatoriamente. Con el modelo de transición
+  El estado inicial y final son descriptas por el operario y no generadas aleatoriamente. Con el modelo de transición
 vemos el movimiento de los eslabones del robot para llegar al próximo estado (punto discretizado de la trayectoria).
 Podríamos usar la heurística del ejercicio 2)a de este práctico (A*) para llegar al objetivo. En este caso no
 podríamos usar algoritmos de búsqueda local ya que no solo debemos llegar al estado final, sino que necesitamos
@@ -59,16 +60,26 @@ seguir una trayectoria establecida.
 
     e. Diseño de un generador
 
-
+  Los problemas de diseño generalmente son de optimización. Esto significa que debemos encontrar la forma de diseñar
+el generador maximizando el ahorro de recursos y el rendimiento del mismo. Para que el generador cumpla con las
+especificaciones deseadas, habrá que implementar un algoritmo relacionando las propiedades y cantidades de los
+materiales a utilizar para saber que tanta eficiencia aportarán al generador.
+  La combinación mas optima es la que utilizaremos como meta.
 
     f. Definición de una secuencia de ensamblado óptima
 
-Es un proceso de planificación. El ensamblado de una pieza no siempre es único por lo que el plan tampoco lo será.
+  Es un proceso de planificación. El ensamblado de una pieza no siempre es único por lo que el plan tampoco lo será.
 Lo importante en este proceso es encontrar al menos una secuencia correcta de ordenes para ensamblar las piezas.
-
-El estado inicial podría no ser único pero si acotado. El estado final si es único. El modelo de transición
+  El estado inicial podría no ser único pero si acotado. El estado final si es único. El modelo de transición
 consistirá entonces en seleccionar, de acuerdo a las restricciones impuestas en el algoritmo para cada pieza,
 un orden de ensamblado. Este deberá ser correcto y sin backtracking (que en ninguna instancia el algoritmo deba
 retirar una pieza ensamblada para colocar otra). La meta será el ensamble de todas las piezas.
 
     g. Planificación del proyecto de una obra
+
+  Es un problema de planificación. Se busca encontrar un orden en las tareas a realizar (algunas de forma paralela o
+simultanea) de manera que se cumplan los ordenes de precedencia de cada una de ellas. Se inicia con las tareas de
+la obra que no requieren requisitos previos para ser ejecutadas. Se procederá con las tareas que requieran la
+finalización de la/s primera/s y así sucesivamente hasta concluir la obra. Cada tarea conlleva cierto tiempo,
+parámetro que utilizaremos para calcular las ganancias y estimar el rango de tiempo que nos llevará a cabo
+realizar la obra.
