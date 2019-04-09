@@ -167,7 +167,7 @@ def verify_position(position):
     if (position[1] < 0 or position[1] > 6):
         return False
 
-    if (map[position[0]][position[1]] == 1):
+    if (map[position[0]][position[1]] != -1):
         return False
 
     return True # Coordenada válida
@@ -178,7 +178,7 @@ if __name__ == "__main__":
 
     initial_state = [1, 0]
 
-    end_state = [7, 0]
+    end_state = [2, 2]
 
     start = Node(initial_state)
     goal = Node(end_state)
