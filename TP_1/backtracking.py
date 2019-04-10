@@ -7,7 +7,8 @@ T = {"d0": 40, "d1":5, "d2":15, "d3":10, "d4":30}
 
 def selection(D, assign):
     """
-    Selección de variable con heurística *variable más restringida*.
+    Selección de variable con heurística *variable más restringida*. La función recibe el diccionario de dominio de las distintas variables "D" y un diccionario con las variables ya asignadas "assign".
+    La función devuelve el key de diccionario asociado a la variable elegida.
     """
     k_D = list(D.keys())
     k_A = list(assign.keys())
@@ -26,6 +27,10 @@ def selection(D, assign):
 
 
 def consistent(var, value, assign, R2):
+    """
+    Función para comprobar la consistencia de una posible asignación de valor a una variable. Dentro de esta función se verifica que la asignación respete todas las restricciones posibles con las variables ya asignadas, devolviendo verdadero; o no haya consistencia en la asignación, devolviendo falso.
+    Recibe como parámetros la variable a asignar "var", el valor a asignar a dicha variable "value", el diccionario con todas las asignaciones ya realizadas "assign" y un diccionario con las restricciones asociadas a cada variable "R2".
+    """
     flag = True
     for v in assign.keys():
         if ((v, var) in R2[var]):
@@ -39,7 +44,11 @@ def consistent(var, value, assign, R2):
 
 
 def backtrack(assign, D, R2):
-
+    """
+    Función principal del algoritmo. Es una búsqueda hacia atrás o backtracking-search, por lo tanto, basicamente es un algoritmo de búsqueda primero en profundidad.
+    Recibe como parámetros un diccionario con las asignaciones ya realizadas "assign" (en el primer llamado es un diccionario vacío pero luego se realiza recursión), un diccionario con el dominio de las variables "D" y un diccionario con las restricciones asociadas a las variables "R2".
+    Se devuelve la solución del problema si la hay, o un falso si no existe solución.
+    """
     if (len(assign) == N): # Condición de salida
         print("SOL")
         return assign
@@ -58,12 +67,7 @@ def backtrack(assign, D, R2):
 
     print("FALSE")
     return False
-
-
-class Node:
-    def __init__(self):
-        self.prev = []
-        self.next = []
+    
 
 if __name__ == "__main__":
 
