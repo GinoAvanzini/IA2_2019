@@ -118,19 +118,20 @@ def genetic(pob, conjunto):
         # Cálculo de fitness de cada individuo de la población. La lista fit tendrá el valor absoluto de fitness, y la lista weight el valor relativo de fitness al resto de la población.
         fit = []
         total_fit = 0
-
+        max_fit = 0
         for ind in pob:
             value = fitness(ind, conjunto)
             fit.append(value)
             total_fit += value
-
-            weight = []
+            if (max_fit < value):
+                max_fit = value
 
         check.append(total_fit/len(fit))
 
-
+        weight = []
         for item in fit:
-            weight.append(1 - (item / total_fit))
+            # print(item / total_fit)
+            weight.append((max_fit - item)/total_fit)
 
         # Evolución de la población
         new_pob = []
@@ -232,24 +233,24 @@ if __name__ == "__main__":
     # [array([18, 7, 32, 24, 30, 12, 16]), array([14, 9, 5, 32, 9]), array([29, 29, 1, 15, 6, 13, 30, 9, 18]), array([16, 27, 9, 20, 30, 20, 28]), array([13, 9, 26, 20, 31, 11]), array([32, 12, 24, 1, 10, 24, 10, 16])]
 
     #conjunto.append(list(range(30, 20, -1)))
-    
+
     prob = []
-    
+
     estant = [i for i in range(0, MAX_LENGHT)]
-    
+
     for i in range(0, 25):
         prob.append(0.1)
-    
+
     for i in range(25, MAX_LENGHT):
         prob.append(0.5)
-    
+
     for i in range(0, 8):
         conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
-        
-        
-    
+
+
+
     #print(conjunto)
-    
+
     #exit()
 
     start = []
