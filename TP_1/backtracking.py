@@ -15,14 +15,6 @@ def selection(D, assign):
     k_A = list(assign.keys())
 
     k = list(set(k_D)^set(k_A))
-    # mvr = k[0]
-    #
-    # for i in k:
-    #     # if (i in k_A):
-    #     #     continue
-    #
-    #     if (len(D[i]) < len(D[mvr])):
-    #         mvr = i
 
     return choice(k)
 
