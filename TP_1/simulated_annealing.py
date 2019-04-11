@@ -21,18 +21,21 @@ def temple_simulado(productos, t_inicial, neighbour, energy):
     Se devuelve el mejor estado encontrado, en forma de lista (historic_best), donde la primer componente es la descripción del estado y la segunda la energía del mismo.
     """
     current = productos
+    
+    current_energy = energy(current)
+    
+    next = []
 
     temp = t_inicial
 
-    historic_best = [current, energy(current)]
+    historic_best = [current, current_energy]
 
     while(1):
 
-        if (temp == 0): return historic_best
+        if (temp == 0): 
+            return historic_best
 
         next = neighbour(current)
-
-        current_energy = energy(current)
         next_energy = energy(next)
 
         # Guardo el mejor camino histórico
@@ -44,11 +47,12 @@ def temple_simulado(productos, t_inicial, neighbour, energy):
 
         if (delta < 0): # Mejor camino (menos distancia recorrida)
             current = next
+            current_energy = next_energy;
         else: # delta is positive -> worse path
             prob = exp(-delta/temp)
-            # print(prob)
             if (random() < prob):
                 current = next
+                current_energy = next_energy
 
         temp = update_T(temp)
 
