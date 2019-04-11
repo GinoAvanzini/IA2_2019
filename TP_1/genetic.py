@@ -4,12 +4,12 @@ from progressBar import printProgressBar
 
 from simulated_annealing import temple_simulado, map_to_coord, neighbours_annealing, distance
 
-N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
+# N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
 N_POB = 10 # Cantidad de individuos en la población
 MAX_LENGHT = 32 # Cantidad de estanterías
-T_0 = 50 # Temperatura inicial a la que inicia el algoritmo de temple simulado
-MAX_GEN = 30 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
+T_0 = 200 # Temperatura inicial a la que inicia el algoritmo de temple simulado
+MAX_GEN = 50 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
 
 MUT_PROB = 10 # Probabilidad de mutar de un individuo, de 0 a 100%
 
@@ -135,7 +135,7 @@ def genetic(pob, conjunto):
             # print(item / total_fit)
             weight.append((max_fit - item)/total_fit)
 
-        check.append(total_fit/len(fit))
+        check.append(total_fit)
 
         # Evolución de la población
         new_pob = []
@@ -173,8 +173,8 @@ def genetic(pob, conjunto):
         for i in range(0, len(pob)):
             if (fit[i] < fit[max_index]):
                 max_index = i
-        print(fit[max_index])
-
+        # print(fit[max_index])
+        print(pob[max_index])
         if (fit[max_index] < best[1]):
             best = [pob[max_index], fit[max_index]]
 
