@@ -1,3 +1,4 @@
+from random import choice
 
 N = 5 # Número de tareas
 DLINE = 100 # Tiempo en que se debe finalizar el proceso en minutos
@@ -14,16 +15,16 @@ def selection(D, assign):
     k_A = list(assign.keys())
 
     k = list(set(k_D)^set(k_A))
-    mvr = k[0]
+    # mvr = k[0]
+    #
+    # for i in k:
+    #     # if (i in k_A):
+    #     #     continue
+    #
+    #     if (len(D[i]) < len(D[mvr])):
+    #         mvr = i
 
-    for i in k:
-        # if (i in k_A):
-        #     continue
-
-        if (len(D[i]) < len(D[mvr])):
-            mvr = i
-
-    return mvr
+    return choice(k)
 
 
 def consistent(var, value, assign, R2):
@@ -67,7 +68,7 @@ def backtrack(assign, D, R2):
 
     print("FALSE")
     return False
-    
+
 
 if __name__ == "__main__":
 
