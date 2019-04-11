@@ -110,9 +110,16 @@ def map_to_coord(pos_pick):
     """
     Función parte del modelo del problema. Recibe la lista de productos, donde cada item se encuentra en un estante numerado entre 0 y 31. Devuelve una lista con los mismos productos pero esta vez descriptos en coordenadas cartesianas del depósito. A la lista se agregan el inicio y el final, donde se supone que el picking comienza y finaliza en la coordenada (0, 0).
     """
+    # Para layout diferente
+    # layout = [1, 11, 27, 20, 7, 29, 26, 30, 25, 28, 15, 6, 17, 23, 21, 19, 18, 2, 14, 4, 31, 5, 22, 9, 8, 16, 24, 0, 3, 12, 10, 13]
+
+    # orden_estant = []
+    # for i in pos_pick:
+    #     orden_estant.append(layout.index(i))
 
     coordenadas = []
 
+    # for i in orden_estant:
     for i in pos_pick:
         for fila in range(0, len(map)):
             if i in map[fila]:
@@ -134,7 +141,7 @@ def map_to_coord(pos_pick):
 
 if __name__ == "__main__":
 
-    n = 10
+    # n = 10
 
     # Generacion de picking en posiciones random
 
