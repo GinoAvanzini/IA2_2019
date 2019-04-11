@@ -6,10 +6,10 @@ from simulated_annealing import temple_simulado, map_to_coord, neighbours_anneal
 
 N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
-N_POB = 6 # Cantidad de individuos en la población
+N_POB = 10 # Cantidad de individuos en la población
 MAX_LENGHT = 32 # Cantidad de estanterías
 T_0 = 50 # Temperatura inicial a la que inicia el algoritmo de temple simulado
-MAX_GEN = 20 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
+MAX_GEN = 30 # Máxima cantidad de iteraciones a la que corta el algoritmo genético
 
 MUT_PROB = 10 # Probabilidad de mutar de un individuo, de 0 a 100%
 
@@ -117,21 +117,25 @@ def genetic(pob, conjunto):
 
         # Cálculo de fitness de cada individuo de la población. La lista fit tendrá el valor absoluto de fitness, y la lista weight el valor relativo de fitness al resto de la población.
         fit = []
-        total_fit = 0
+        # total_fit = 0
         max_fit = 0
         for ind in pob:
             value = fitness(ind, conjunto)
             fit.append(value)
-            total_fit += value
+            # total_fit += value
             if (max_fit < value):
                 max_fit = value
 
-        check.append(total_fit/len(fit))
+        total_fit = 0
+        for item in fit:
+            total_fit += (max_fit - item)
 
         weight = []
         for item in fit:
             # print(item / total_fit)
             weight.append((max_fit - item)/total_fit)
+
+        check.append(total_fit/len(fit))
 
         # Evolución de la población
         new_pob = []
