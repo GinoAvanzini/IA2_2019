@@ -130,7 +130,7 @@ def a_star(start, goal, generate_neighbours, heuristica=distance):
                             i.cameFrom = current # Cambio el padre
                             i.gScore = tentative_gScore # y uso el nuevo g
                             i.fScore = i.gScore + i.hScore
-
+    print("NO SOL")
     return None, False # No se encontró solución
 
 
