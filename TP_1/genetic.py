@@ -108,7 +108,7 @@ def genetic(pob, conjunto):
     La función devuelve el mejor indiviuo luego de MAX_GEN generaciones.
     """
 
-    aux_fit = fitness(pob[0], pob)
+    aux_fit = fitness(pob[0], conjunto)
     best = [pob[0], aux_fit]
 
     count = 0
@@ -238,19 +238,20 @@ if __name__ == "__main__":
 
     #conjunto.append(list(range(30, 20, -1)))
 
-    prob = []
+    # prob = []
+    #
+    # estant = [i for i in range(0, MAX_LENGHT)]
+    #
+    # for i in range(0, 25):
+    #     prob.append(0.1)
+    #
+    # for i in range(25, MAX_LENGHT):
+    #     prob.append(0.5)
+    #
+    # for i in range(0, 8):
+    #     conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
 
-    estant = [i for i in range(0, MAX_LENGHT)]
-
-    for i in range(0, 25):
-        prob.append(0.1)
-
-    for i in range(25, MAX_LENGHT):
-        prob.append(0.5)
-
-    for i in range(0, 8):
-        conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
-
+    conjunto = [[27, 29, 31, 25, 30, 26, 28]]
 
 
     #print(conjunto)
