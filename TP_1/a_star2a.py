@@ -1,7 +1,7 @@
 from a_star2b import Node, STEP, a_star
 import random
 
-TOP = 100
+TOP = 50
 STEP = 10
 
 # MODELADO DEL problema

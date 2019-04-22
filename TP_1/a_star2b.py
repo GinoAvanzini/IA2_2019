@@ -108,7 +108,10 @@ def a_star(start, goal, generate_neighbours, heuristica=distance, dim=None, wall
         closedSet.append(current)
 
         # Dependiente del modelo del problema
-        neighbours = generate_neighbours(current, wall=wall, gdl=dim)
+        if (wall or dim):
+            neighbours = generate_neighbours(current, wall=wall, gdl=dim)
+        else:
+            neighbours = generate_neighbours(current)
 
         for vecino in neighbours:
 
