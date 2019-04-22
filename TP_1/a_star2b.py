@@ -77,7 +77,7 @@ def check_list(node, list):
 
 # Función principal de algoritmo A*
 # [INDEPENDIENTE DEL PROBLEMA]
-def a_star(start, goal, generate_neighbours, heuristica=distance):
+def a_star(start, goal, generate_neighbours, heuristica=distance, dim=None, wall=None):
     """
     Función principal de algoritmo A estrella. Recibe como parámetros el nodo
     inicial (start) y objetivo del problema (goal), clase Node ,con toda su información; y una función con el modo en que se generarán los vecinos (modelado del problema).
@@ -108,7 +108,7 @@ def a_star(start, goal, generate_neighbours, heuristica=distance):
         closedSet.append(current)
 
         # Dependiente del modelo del problema
-        neighbours = generate_neighbours(current)
+        neighbours = generate_neighbours(current, wall=wall, gdl=dim)
 
         for vecino in neighbours:
 
@@ -130,7 +130,7 @@ def a_star(start, goal, generate_neighbours, heuristica=distance):
                             i.cameFrom = current # Cambio el padre
                             i.gScore = tentative_gScore # y uso el nuevo g
                             i.fScore = i.gScore + i.hScore
-    print("NO SOL")
+    # print("NO SOL")
     return None, False # No se encontró solución
 
 
