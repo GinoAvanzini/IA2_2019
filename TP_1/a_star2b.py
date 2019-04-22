@@ -181,7 +181,7 @@ if __name__ == "__main__":
 
     initial_state = [1, 0]
 
-    end_state = [2, 2]
+    end_state = [3, 3]
 
     start = Node(initial_state)
     goal = Node(end_state)
