@@ -144,8 +144,12 @@ if __name__ == "__main__":
     # n = 10
 
     # Generacion de picking en posiciones random
-    # pos_pick = [randint(0, 31) for i in range(0, n)]
-    pos_pick = [27, 29, 31, 25, 30, 26, 28]
+
+    #pos_pick = [randint(0, 31) for i in range(0, n)]
+
+    #pos_pick=[20,21,22,30,27,15,2,31,19,23] #opcion 1
+
+    pos_pick=[20,21,22,30,27,31,27,31,18,23] #opcion 2
 
     # Obtengo la coordenada del pasillo contiguo a cada uno de los lugares
     # del almacen con objetos.

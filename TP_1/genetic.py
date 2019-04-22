@@ -251,7 +251,7 @@ if __name__ == "__main__":
     # for i in range(0, 8):
     #     conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
 
-    conjunto = [[27, 29, 31, 25, 30, 26, 28]]
+    conjunto = [[20,21,22,30,27,31,27,31,18,23]]
 
 
     #print(conjunto)

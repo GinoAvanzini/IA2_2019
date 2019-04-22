@@ -15,6 +15,14 @@ def selection(D, assign):
     k_A = list(assign.keys())
 
     k = list(set(k_D)^set(k_A))
+    # mvr = k[0]
+    #
+    # for i in k:
+    #     # if (i in k_A):
+    #     #     continue
+    #
+    #     if (len(D[i]) < len(D[mvr])):
+    #         mvr = i
 
     return choice(k)
 
@@ -69,7 +77,7 @@ if __name__ == "__main__":
         D[i] = list(range(0, DLINE-T[i], STEP))
 
     assign = {}
-
+    
     print(selection(D, assign))
     print(T)
     print(D)
@@ -82,4 +90,4 @@ if __name__ == "__main__":
         "d4":[("d3", "d4"), ("d2", "d4")]
     }
 
-    print(backtrack(assign, D, R2))
+    #print(backtrack(assign, D, R2))
