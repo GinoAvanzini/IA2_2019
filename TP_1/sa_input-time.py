@@ -5,13 +5,13 @@ from time import time
 from random import randint
 import csv
 
-ITER = 35
+ITER = 50
 
 
 if __name__ == "__main__":
     
     # Cantidad de productos en una orden
-    inputs = [3, 5, 7, 10, 13, 15, 20, 25, 30]
+    inputs = [3, 5, 10, 15, 20, 25, 30]
     #inputs = [3]
     
     # Tiempo promedio de ejecución en función de cada input
@@ -29,7 +29,7 @@ if __name__ == "__main__":
                 coordenadas = map_to_coord(pos_pick)
                 
                 start = time()
-                _ = temple_simulado(coordenadas, 75, neighbours_annealing, distance)
+                _ = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
                 end = time()
                 
                 time_avg += end - start
