@@ -13,8 +13,6 @@ MAX_GEN = 50 # Máxima cantidad de iteraciones a la que corta el algoritmo gené
 
 MUT_PROB = 10 # Probabilidad de mutar de un individuo, de 0 a 100%
 
-check = [] # Verificación de reducción de fitness
-
 # [INDEPENDIENTE DEL PROBLEMA]
 def cross_points(dim):
     """
@@ -102,11 +100,13 @@ def seleccion(pob, weight):
 #-------------------------------------------------------------------------------
 
 # [PARCIALMENTE DEPENDIENTE DEL PROBLEMA]
-def genetic(pob, conjunto):
+def genetic(pob, conjunto, hist=False):
     """
     Función principal de la implementación del algoritmo genético. Recibe como parámetros la población inicial y una variable "conjunto", exclusiva del modelado, que es el conjunto de pedidos para los que se desea optimizar el layout del almacen.
     La función devuelve el mejor indiviuo luego de MAX_GEN generaciones.
     """
+
+    history = []
 
     aux_fit = fitness(pob[0], conjunto)
     best = [pob[0], aux_fit]
@@ -134,8 +134,6 @@ def genetic(pob, conjunto):
         for item in fit:
             # print(item / total_fit)
             weight.append((max_fit - item)/total_fit)
-
-        check.append(total_fit)
 
         # Evolución de la población
         new_pob = []
@@ -173,12 +171,18 @@ def genetic(pob, conjunto):
         for i in range(0, len(pob)):
             if (fit[i] < fit[max_index]):
                 max_index = i
-        # print(fit[max_index])
-        print(pob[max_index])
+
+        history.append(fit[max_index])
+        
+        # print(pob[max_index])
         if (fit[max_index] < best[1]):
             best = [pob[max_index], fit[max_index]]
 
-    return best
+    if hist:
+        return best, history
+    else:
+        return best
+    
 
 
 # [DEPENDIENTE DEL PROBLEMA]
@@ -218,45 +222,22 @@ def generate_ind():
 
 if __name__ == "__main__":
 
-    # Generar un conjunto de órdenes
-    # conjunto = [[18, 7, 32, 24, 30, 12, 16], [14, 9, 5, 32, 9], [29, 29, 1, 15, 6, 13, 30, 9, 18], [16, 27, 9, 20, 30, 20, 28], [13, 9, 26, 20, 31, 11], [32, 12, 24, 1, 10, 24, 10, 16]]
-    # for i in range(0, N_PEDIDO):
-    #     dim = randint(2, MAX_LENGHT-1)
-    #     aux = []
-    #     for j in range(0, dim):
-    #         aux.append(randint(0, MAX_LENGHT-1))
-    #     conjunto.append(aux)
-    #     print(aux)
-
     conjunto = []
-    # for i in range(0, 10):
-    #     conjunto.append(list(range(0, 30)))
-    #     print(conjunto[i])
 
-    # Test Franco Pylau
-    # [array([18, 7, 32, 24, 30, 12, 16]), array([14, 9, 5, 32, 9]), array([29, 29, 1, 15, 6, 13, 30, 9, 18]), array([16, 27, 9, 20, 30, 20, 28]), array([13, 9, 26, 20, 31, 11]), array([32, 12, 24, 1, 10, 24, 10, 16])]
+    prob = []
+    
+    estant = [i for i in range(0, MAX_LENGHT)]
+    
+    for i in range(0, 25):
+        prob.append(0.1)
+    
+    for i in range(25, MAX_LENGHT):
+        prob.append(0.5)
+    
+    for i in range(0, 8):
+        conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
 
-    #conjunto.append(list(range(30, 20, -1)))
-
-    # prob = []
-    #
-    # estant = [i for i in range(0, MAX_LENGHT)]
-    #
-    # for i in range(0, 25):
-    #     prob.append(0.1)
-    #
-    # for i in range(25, MAX_LENGHT):
-    #     prob.append(0.5)
-    #
-    # for i in range(0, 8):
-    #     conjunto.append(choices(population=estant, k=randint(3, 7), weights=prob))
-
-    conjunto = [[20,21,22,30,27,31,27,31,18,23]]
-
-
-    #print(conjunto)
-
-    #exit()
+    # conjunto = [[20,21,22,30,27,31,27,31,18,23]]
 
     start = []
     for i in range(0, N_POB):
@@ -264,4 +245,3 @@ if __name__ == "__main__":
 
     best = genetic(start, conjunto)
     print(best)
-    print(check)
