@@ -1,8 +1,8 @@
 from random import randint, choices
 from numpy.random import choice
 from progressBar import printProgressBar
-
 from simulated_annealing import temple_simulado, map_to_coord, neighbours_annealing, distance
+
 
 # N_PEDIDO = 1 # Cantidad de pedidos para los que se desea optimizar el layout del almacen
 
