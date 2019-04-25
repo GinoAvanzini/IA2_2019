@@ -100,7 +100,7 @@ def seleccion(pob, weight):
 #-------------------------------------------------------------------------------
 
 # [PARCIALMENTE DEPENDIENTE DEL PROBLEMA]
-def genetic(pob, conjunto, hist=False):
+def genetic(pob, conjunto, mut=MUT_PROB, hist=False, status=True):
     """
     Función principal de la implementación del algoritmo genético. Recibe como parámetros la población inicial y una variable "conjunto", exclusiva del modelado, que es el conjunto de pedidos para los que se desea optimizar el layout del almacen.
     La función devuelve el mejor indiviuo luego de MAX_GEN generaciones.
@@ -112,7 +112,10 @@ def genetic(pob, conjunto, hist=False):
     best = [pob[0], aux_fit]
 
     count = 0
-    printProgressBar(0, MAX_GEN)
+
+    if status:
+        printProgressBar(0, MAX_GEN)
+
     while (count < MAX_GEN):
 
         # Cálculo de fitness de cada individuo de la población. La lista fit tendrá el valor absoluto de fitness, y la lista weight el valor relativo de fitness al resto de la población.
@@ -145,10 +148,10 @@ def genetic(pob, conjunto, hist=False):
             s1, s2 = crossover(ind1, ind2) # Crossover
 
             # Mutación
-            if (randint(0, 100) < MUT_PROB):
+            if (randint(0, 100) < mut):
                 s1 = mutacion(s1)
 
-            if (randint(0, 100) < MUT_PROB):
+            if (randint(0, 100) < mut):
                 s2 = mutacion(s1)
 
             new_pob.append(s1)
@@ -157,7 +160,9 @@ def genetic(pob, conjunto, hist=False):
         pob = new_pob # Actualización de la población
 
         count += 1
-        printProgressBar(count, MAX_GEN)
+
+        if status:
+            printProgressBar(count, MAX_GEN)
 
         # Selección del mejor de la población
         # Esto podría realizarse para cada generación, y no solo quedarse con el último mejor. SImilar a lo que se hizo en el temple simulado.
