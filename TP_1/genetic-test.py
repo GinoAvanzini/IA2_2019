@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from genetic import genetic, generate_ind
+from simulated_annealing import map_to_coord, temple_simulado, neighbours_annealing, distance
 from matplotlib import pyplot as plt
 from random import randint, choices
 
@@ -37,91 +38,86 @@ best, history = genetic(start, conjunto, hist=True)
 print(best)
 print("DONE")
 
-with open('fitness-test.csv', mode='w') as temp_file:
+with open('../tests/fitness-test.csv', mode='w') as temp_file:
     writer = csv.writer(temp_file, quoting=csv.QUOTE_NONE)
-        
+
     writer.writerow(['GEN', 'fitness'])
 
     for i in range(0, N_POB):
         writer.writerow([i, history[i]])
 
+cost0 = []
+cost1 = []
 
-# from simulated_annealing import map_to_coord, temple_simulado, neighbours_annealing, distance
+for orden in conjunto:
+    coordenadas = map_to_coord(orden)
+    _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
+    cost0.append(costo)
 
-# cost0 = []
-# cost1 = []
+    # Generación de población inicial
+    start = []
+    for i in range(0, N_POB):
+        start.append(generate_ind())
 
-# for orden in conjunto:
-#     coordenadas = map_to_coord(orden)
-#     _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
-#     cost0.append(costo)
-    
-#     # Generación de población inicial
-#     start = []
-#     for i in range(0, N_POB):
-#         start.append(generate_ind())
-    
-#     new_layout, _ = genetic(start, [orden], status=False)
-    
-#     orden_estant = []
-#     for prod in orden:
-#         orden_estant.append(new_layout.index(prod))
-    
-#     coordenadas = map_to_coord(orden_estant)
-#     _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
-#     cost1.append(costo)
-    
+    new_layout, _ = genetic(start, [orden])
 
-# plt.plot(cost0)
-# plt.plot(cost1)
-# plt.legend("costo con layout sin optimizar", "costo con layout optimizado")
-# plt.grid()
+    orden_estant = []
+    for prod in orden:
+        orden_estant.append(new_layout.index(prod))
+
+    coordenadas = map_to_coord(orden_estant)
+    _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
+    cost1.append(costo)
 
 
+fig, ax = plt.subplots(1, 2)
+ax[0].plot(cost0, label="costo con layout sin optimizar")
+ax[0].plot(cost1, label="costo con layout optimizado")
+ax[0].grid()
 
-# avg = 0
-# for i, j in zip(cost0, cost1):
-#     avg += (i - j) / i
-# avg = avg * 100 / len(cost0)
+avg = 0
+for i, j in zip(cost0, cost1):
+    avg += (i - j) / i
+avg = avg * 100 / len(cost0)
 
 # print(avg)
 
+ans = []
 
-# ans = []
+mut_prob = list(range(0, 70, 10))
 
-# mut_prob = list(range(0, 55, 5))
+for m in mut_prob:
+    cost0 = []
+    cost1 = []
 
-# for m in mut_prob:
-#     cost0 = []
-#     cost1 = []
+    for orden in conjunto:
+        coordenadas = map_to_coord(orden)
+        _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
+        cost0.append(costo)
 
-#     for orden in conjunto:
-#         coordenadas = map_to_coord(orden)
-#         _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
-#         cost0.append(costo)
+        # Generación de población inicial
+        start = []
+        for i in range(0, N_POB):
+            start.append(generate_ind())
 
-#         # Generación de población inicial
-#         start = []
-#         for i in range(0, N_POB):
-#             start.append(generate_ind())
+        new_layout, _ = genetic(start, [orden], mut=m)
 
-#         new_layout, _ = genetic(start, [orden], mut=m, status=False)
+        orden_estant = []
+        for prod in orden:
+            orden_estant.append(new_layout.index(prod))
 
-#         orden_estant = []
-#         for prod in orden:
-#             orden_estant.append(new_layout.index(prod))
+        coordenadas = map_to_coord(orden_estant)
+        _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
+        cost1.append(costo)
 
-#         coordenadas = map_to_coord(orden_estant)
-#         _, costo = temple_simulado(coordenadas, 200, neighbours_annealing, distance)
-#         cost1.append(costo)
-    
-#     avg = 0
-#     for i, j in zip(cost0, cost1):
-#         avg += (i - j) / i
-#     avg = avg * 100 / len(cost0)
+    avg = 0
+    for i, j in zip(cost0, cost1):
+        avg += (i - j) / i
+    avg = avg * 100 / len(cost0)
 
-#     ans.append(avg)
+    ans.append(avg)
 
+ax[1].plot(mut_prob, ans)
+ax[1].grid()
 
-
-
+plt.savefig("genetic_test.png")
