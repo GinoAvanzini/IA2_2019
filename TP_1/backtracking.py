@@ -27,7 +27,7 @@ def selection(D, assign):
     return choice(k)
 
 
-def consistent(var, value, assign, R2):
+def consistent(var, value, assign, R2, M):
     """
     Función para comprobar la consistencia de una posible asignación de valor a una variable. Dentro de esta función se verifica que la asignación respete todas las restricciones posibles con las variables ya asignadas, devolviendo verdadero; o no haya consistencia en la asignación, devolviendo falso.
     Recibe como parámetros la variable a asignar "var", el valor a asignar a dicha variable "value", el diccionario con todas las asignaciones ya realizadas "assign" y un diccionario con las restricciones asociadas a cada variable "R2".
@@ -40,11 +40,14 @@ def consistent(var, value, assign, R2):
         if ((var, v) in R2[var]):
             if (value + T[var] > assign[v]):
                 flag = False
-    print(flag)
+        if (M[v] in M[var]):
+            if (not ((assign[v] + T[var] < value) or (value + T[var] < assign[v]))):
+                flag = False
+    # print(flag)
     return flag
 
 
-def backtrack(assign, D, R2):
+def backtrack(assign, D, R2, M):
     """
     Función principal del algoritmo. Es una búsqueda hacia atrás o backtracking-search, por lo tanto, basicamente es un algoritmo de búsqueda primero en profundidad.
     Recibe como parámetros un diccionario con las asignaciones ya realizadas "assign" (en el primer llamado es un diccionario vacío pero luego se realiza recursión), un diccionario con el dominio de las variables "D" y un diccionario con las restricciones asociadas a las variables "R2".
@@ -57,11 +60,11 @@ def backtrack(assign, D, R2):
     var = selection(D, assign) # Falta selecciónar solo entre las no asignadas [SOLUCIONADO?]
 
     for i in D[var]:
-        if (consistent(var, i, assign, R2)):
+        if (consistent(var, i, assign, R2, M)):
             assign[var] = i
             print(assign)
             print("LEVEL")
-            ans = backtrack(assign, D, R2)
+            ans = backtrack(assign, D, R2, M)
             if (ans != False):
                 return ans
             assign.pop(var)
@@ -82,6 +85,7 @@ if __name__ == "__main__":
     print(T)
     print(D)
 
+    # Restricciones de precedencia
     R2 = {
         "d0":[("d0", "d1"), ("d0", "d2")],
         "d1":[("d0", "d1"), ("d1", "d3")],
@@ -90,4 +94,13 @@ if __name__ == "__main__":
         "d4":[("d3", "d4"), ("d2", "d4")]
     }
 
-    #print(backtrack(assign, D, R2))
+    # Restricción de recursos
+    M = {
+        "d0":["m0", "m3"],
+        "d1":["m1", "m4"],
+        "d2":["m0"],
+        "d3":["m1", "m2", "m3"],
+        "d4":["m2", "m4"]
+    }
+
+    print(backtrack(assign, D, R2, M))
