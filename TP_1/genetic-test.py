@@ -120,4 +120,4 @@ for m in mut_prob:
 ax[1].plot(mut_prob, ans)
 ax[1].grid()
 
-plt.savefig("genetic_test.png")
+plt.savefig("../tests/genetic_test.png")
