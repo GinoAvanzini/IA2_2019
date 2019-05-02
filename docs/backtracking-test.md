@@ -1,6 +1,5 @@
 
 # Implementación de algoritmo de satisfacción de restricciones
----
 
 Se implementó un algoritmo de *backtracking* para resolver el problema de satisfacción de restricciones, más especificamente, de *scheduling*.
 

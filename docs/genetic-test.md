@@ -1,6 +1,5 @@
 
 # Implementación de algoritmo genético para optimizar la ubicación de los productos en el almacén
----
 
 En este problema se implementó un algoritmo genético para resolver el problema de optimización de la ubicación de los productos en un layout definido del almacen, de tal forma de optimizar el picking para un conjunto de ordenes de productos habituales.
 
@@ -97,7 +96,7 @@ plt.grid()
 
 
 
-![png](output_9_1.png)
+![ ](output_9_1.png)
 
 
 Como se puede observar en el gráfico, esta manera de evaluar no da resultados conclusivos del funcionamiento del algoritmo, esto podría deberse a que la diferencia de *fitness* entre el estado inicial y el óptimo no es la suficiente y al alcanzarse un mínimo este *fitness* comienza a oscilar.
@@ -148,7 +147,7 @@ plt.grid()
 ```
 
 
-![png](output_15_0.png)
+![ ](output_15_0.png)
 
 
 
@@ -172,4 +171,4 @@ En [genetic-test.py](./genetic-test.py) se realiza un análisis para encontrar u
 
 Los resultados obtenidos son los de la gráfica:
 
-![](../tests/genetic_test.png)
+![ ](genetic_test.png)

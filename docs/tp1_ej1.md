@@ -2,16 +2,15 @@
 ---
 title:  'Trabajo práctico N°1: Búsqueda y Optimización'
 author:
-- Avanzini, Gino
-- Cabrino, Emiliano
-- Cantaloube, Adrián 
-- Fernández, Gonzalo
+- Gino Avanzini
+- Emiliano Cabrino
+- Adrián Cantaloube
+- Gonzalo Fernández
 
-affiliation: Facultdad de Ingeniería, Universidad Nacional de Cuyo
 
 ...
 
-# Ejercicio N°1:
+# Análisis y selección de algoritmos según el tipo de problema
 
 En los problemas enunciados abajo
 - Qué algoritmo/s utilizaría en cada caso. Justifique.
