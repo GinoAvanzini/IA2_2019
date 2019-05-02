@@ -1,6 +1,5 @@
 
 # Implementación de algoritmo A* para trayectoria de robot de 6 grados de libertad
----
 
 El problema del robot con 6 grados de libertad fue modelado en el espacio articular, donde cada estado del problema es el valor angular de cada articulación con una discretización de ángulos sexagecimales enteros, es decir, un vector de estado es una lista de 6 componentes enteros.
 
@@ -92,7 +91,7 @@ plt.grid()
 ```
 
 
-![png](output_11_0.png)
+![ ](output_11_0.png)
 
 
 Si se analiza el tiempo de ejecución en relación del tiempo de ejecución máximo, es decir para 6 grados de libertad, los resultados son los siguientes:

@@ -1,6 +1,5 @@
 
 # Implementación de recocido simulado para optimización de orden de picking en almacen
----
 
 En este problema el objetivo es determinar el orden óptimo de picking para una serie de productos en el almacén. Esto se determina mediante un algoritmo de recocido simulado cuyos parámetros e implementación se explicarán a continuación.
 
@@ -123,7 +122,7 @@ plt.grid()
 ```
 
 
-![png](output_18_0.png)
+![ ](output_18_0.png)
 
 
 ## Análisis de temperatura inicial (cantidad de iteraciones) vs mejora en la solución
@@ -179,7 +178,7 @@ ax1.grid()
 ```
 
 
-![png](output_23_0.png)
+![ ](output_23_0.png)
 
 
 $mejora = \frac{(energia(inicial) - energia(final))}{energia(inicial)}$
