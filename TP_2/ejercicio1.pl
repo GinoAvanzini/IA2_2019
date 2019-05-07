@@ -1,5 +1,5 @@
 %------------Rama izquierda------------
-
+%joints_dazzling_and_rusting(true/false,valvetype for thickness analisys)
 joints_dazzling_and_rusting(X1,Type):-X1==true,writeln('Coordination is required'),!;X1==false,thickness_less_treshold_limit(Type).
 
 thickness_less_treshold_limit(Valvetype):-safety_valve_thickness(Valvetype,Thickness),
