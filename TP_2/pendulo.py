@@ -3,18 +3,27 @@ from math import sin, cos, pow, pi
 from matplotlib import pyplot as plt
 
 
-def generate_profile(center, min, max, step, theta):
-    profile = [0] * len(theta)
-    index_min = theta.index(min)
-    index_center = theta.index(center)
-    index_max = theta.index(max)
-    # profile[index_center] = 1
-    for i in range(index_min, index_center):
-        profile[i] = (i - index_min) / (index_center - index_min)
-    for i in range(index_center, index_max+1):
-        profile[i] = 1 - (i - index_center) / (index_max - index_center)
+def generate_profile(center, step, theta, min=None, max=None):
 
-    return profile
+    index_center = theta.index(center)
+
+    if min:
+        index_min = theta.index(min)
+        prof1 = [0] * index_center
+        for i in range(index_min, index_center):
+            prof1[i] = (i - index_min) / (index_center - index_min)
+    else:
+        prof1 = [1] * index_center
+
+    if max:
+        index_max = theta.index(max)
+        prof2 = [0] * (len(theta) - index_center)
+        for i in range(index_center, index_max+1):
+            prof2[i] = 1 - (i - index_center) / (index_max - index_center)
+    else:
+        prof2 = [1] * (len(theta) - index_center)
+
+    return prof1+prof2
 
 
 def update(x, dt):
@@ -30,7 +39,6 @@ def update(x, dt):
     x_t[0] = x[0] + x[1]*dt + x[2]*pow(dt, 2)/2
 
     return x_t
-
 
 
 if __name__ == "__main__":
@@ -82,7 +90,7 @@ if __name__ == "__main__":
 
     theta = list(range(-90, 90+STEP, STEP))
 
-    p1 = generate_profile(30, -10, 75, STEP, theta)
+    p1 = generate_profile(0, STEP, theta, max=-45)
     plt.plot(theta, p1)
     plt.grid()
     plt.show()
