@@ -4,10 +4,13 @@ from matplotlib import pyplot as plt
 
 
 def generate_profile(center, step, theta, min=None, max=None):
+    """
+    
+    """
 
     index_center = theta.index(center)
 
-    if min:
+    if (min is not None):
         index_min = theta.index(min)
         prof1 = [0] * index_center
         for i in range(index_min, index_center):
@@ -15,11 +18,11 @@ def generate_profile(center, step, theta, min=None, max=None):
     else:
         prof1 = [1] * index_center
 
-    if max:
+    if (max is not None):
         index_max = theta.index(max)
         prof2 = [0] * (len(theta) - index_center)
         for i in range(index_center, index_max+1):
-            prof2[i] = 1 - (i - index_center) / (index_max - index_center)
+            prof2[i - index_center] = 1 - (i - index_center) / (index_max - index_center)
     else:
         prof2 = [1] * (len(theta) - index_center)
 
@@ -90,7 +93,7 @@ if __name__ == "__main__":
 
     theta = list(range(-90, 90+STEP, STEP))
 
-    p1 = generate_profile(0, STEP, theta, max=-45)
+    p1 = generate_profile(0, STEP, theta, min=-20, max=45)
     plt.plot(theta, p1)
     plt.grid()
     plt.show()
