@@ -36,6 +36,46 @@ def fuzzifier(value, var, T):
     return ans
 
 
+def fuzzy_control(value, theta, T):
+    # Borrosificación
+    mu = fuzzifier(value, theta, T)
+
+    # Cálculo de antecedentes
+    # Por ahora es relación directa
+
+    # Truncado de conjuntos borrosos de salida 
+    # (RECORDAR: Por ahora los conjuntos de entrada y salida son los mismos,
+    # por eso se utiliza la misma variable)
+    newT = list(T)
+    for i, profile in enumerate(T):
+        for j, value in enumerate(profile):
+            if (mu[i] < value):
+                newT[i][j] = mu[i]
+            else:
+                newT[i][j] = value
+
+    for i in newT:
+        plt.plot(theta, i)
+    plt.grid()
+    plt.show()
+
+    # Disyunción/Unión de los conjuntos borrosos de salida
+    G = []
+    for i in range(0, len(theta)):
+        max_value = 0
+        for profile in T:
+            if (max_value < profile[i]):
+                max_value = profile[i]
+        G.append(max_value)
+
+    print(G, len(theta), len(G))
+    plt.plot(theta, G)
+    plt.grid()
+    plt.show()
+
+    # Desborrosificación
+
+
 def update(x, dt):
 
     x_t = x
@@ -117,4 +157,4 @@ if __name__ == "__main__":
     plt.grid()
     plt.show()
 
-    print(fuzzifier(-45, theta, T))
+    fuzzy_control(15, theta, T)
