@@ -29,6 +29,13 @@ def generate_profile(center, step, theta, min=None, max=None):
     return prof1+prof2
 
 
+def fuzzifier(value, var, T):
+    ans = []
+    for profile in T:
+        ans.append(profile[var.index(value)])
+    return ans
+
+
 def update(x, dt):
 
     x_t = x
@@ -91,9 +98,23 @@ if __name__ == "__main__":
     
     # plt.show()
 
+    # Variable linguística: (theta, T(theta), U)
+    #   - theta: Nombre de la variable
+    #   - T(theta): MN, N, Z, P, MP
+    #   - U: rango de -90 a 90 grados sexagesimales
     theta = list(range(-90, 90+STEP, STEP))
 
-    p1 = generate_profile(0, STEP, theta, min=-20, max=45)
-    plt.plot(theta, p1)
+    # Generación de conjuntos borrosos
+    MN = generate_profile(-60, STEP, theta, max=-30)
+    N = generate_profile(-30, STEP, theta, min=-60, max=0)
+    Z = generate_profile(0, STEP, theta, min=-30, max=30)
+    P = generate_profile(30, STEP, theta, min=0, max=60)
+    MP = generate_profile(60, STEP, theta, min=30)
+    
+    T = (MN, N, Z, P, MP)
+    for i in T:
+        plt.plot(theta, i)
     plt.grid()
     plt.show()
+
+    print(fuzzifier(-45, theta, T))
