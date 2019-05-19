@@ -101,7 +101,7 @@ def update(x, dt):
 if __name__ == "__main__":
 
     T_STEP = 5
-    V_STEP = 0.001
+    V_STEP = 0.005
     A_STEP = 0.01
 
     #--------------------------------------------------
@@ -148,28 +148,50 @@ if __name__ == "__main__":
     # plt.show()
 
     # Variable linguística: (theta, T(theta), U)
-    #   - theta: Nombre de la variable
-    #   - T(theta): MN, N, Z, P, MP
+    #   - A: Nombre de la variable
+    #   - T(A): MN, N, Z, P, MP
     #   - U: rango de -90 a 90 grados sexagesimales
-    theta = arange(-90, 90+T_STEP, T_STEP)
-    v = arange(-0.05, 0.05+V_STEP, V_STEP)
-    a = arange(-0.2, 0.2+A_STEP, A_STEP)
-    print(theta)
-    print(v)
-    print(a)
-
-    # Generación de conjuntos borrosos
-    MN = generate_profile(-60, theta, max=-30)
-    N = generate_profile(-30, theta, min=-60, max=0)
-    Z = generate_profile(0, theta, min=-30, max=30)
-    P = generate_profile(30, theta, min=0, max=60)
-    MP = generate_profile(60, theta, min=30)
+    theta = []
+    v = []
     
-    T = (MN, N, Z, P, MP)
-    for i in T:
-        plt.plot(theta, i)
+    theta.append(arange(-90, 90+T_STEP, T_STEP))
+    v.append(arange(-0.05, 0.05+V_STEP, V_STEP))
+    # a = arange(-0.2, 0.2+A_STEP, A_STEP)
+    for i in range(0, len(v[0])):
+        v[0][i] = round(v[0][i], 3)
+    print(v[0])
 
-    plt.grid()
+    # Generación de conjuntos borrosos de entradas
+    # Conjunto borroso de theta:
+    theta.append({})
+    theta[1]['MN'] = generate_profile(-60, theta[0], max=-30)
+    theta[1]['N'] = generate_profile(-30, theta[0], min=-60, max=0)
+    theta[1]['Z'] = generate_profile(0, theta[0], min=-30, max=30)
+    theta[1]['P'] = generate_profile(30, theta[0], min=0, max=60)
+    theta[1]['MP'] = generate_profile(60, theta[0], min=30)
+    # Conjunto borroso de velocidad angular:
+    # Conjunto borroso de theta:
+    v.append({})
+    v[1]['MN'] = generate_profile(-0.04, v[0], max=-0.025)
+    v[1]['N'] = generate_profile(-0.02, v[0], min=-0.04, max=0)
+    v[1]['Z'] = generate_profile(0, v[0], min=-0.025, max=0.025)
+    v[1]['P'] = generate_profile(0.02, v[0], min=0, max=0.04)
+    v[1]['MP'] = generate_profile(0.04, v[0], min=0.025)
+
+    # plt.plot(v[0], v[1]['Z'])
+    # plt.grid()
+    # plt.show()
+    
+    fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(16, 5))
+    for i in theta[1].values():
+        ax0.plot(theta[0], i)
+        print(i)
+    ax0.grid()
+
+    for i in v[1].values():
+        ax1.plot(v[0], i)
+        print(i)
+    ax1.grid()
+
     plt.show()
-
     # fuzzy_control(20, theta, T)
