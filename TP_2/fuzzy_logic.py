@@ -177,10 +177,6 @@ if __name__ == "__main__":
     v[1]['Z'] = generate_profile(0, v[0], min=-0.025, max=0.025)
     v[1]['P'] = generate_profile(0.02, v[0], min=0, max=0.04)
     v[1]['MP'] = generate_profile(0.04, v[0], min=0.025)
-
-    # plt.plot(v[0], v[1]['Z'])
-    # plt.grid()
-    # plt.show()
     
     fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(16, 5))
     for i in theta[1].values():
