@@ -1,4 +1,18 @@
 def binary_search(arr, key):
+    """Binary search of element in list
+
+    Parameters
+    ----------
+    arr : list
+        The list where we want to find the element
+    key : dtype of list's elements
+        The element to find
+
+    Returns
+    -------
+    ans
+        The index of the element in the list
+    """
     index = int(len(arr) / 2)
     pivot = arr[index]
     if (key == pivot):

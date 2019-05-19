@@ -1,17 +1,19 @@
 
 from math import sin, cos, pow, pi
+from numpy import arange
 from matplotlib import pyplot as plt
 
+from binary_search import binary_search
 
-def generate_profile(center, step, theta, min=None, max=None):
+
+def generate_profile(center, var, min=None, max=None):
     """
     
     """
 
-    index_center = theta.index(center)
-
+    index_center = binary_search(var, center)
     if (min is not None):
-        index_min = theta.index(min)
+        index_min = binary_search(var, min)
         prof1 = [0] * index_center
         for i in range(index_min, index_center):
             prof1[i] = (i - index_min) / (index_center - index_min)
@@ -19,12 +21,12 @@ def generate_profile(center, step, theta, min=None, max=None):
         prof1 = [1] * index_center
 
     if (max is not None):
-        index_max = theta.index(max)
-        prof2 = [0] * (len(theta) - index_center)
+        index_max = binary_search(var, max)
+        prof2 = [0] * (len(var) - index_center)
         for i in range(index_center, index_max+1):
             prof2[i - index_center] = 1 - (i - index_center) / (index_max - index_center)
     else:
-        prof2 = [1] * (len(theta) - index_center)
+        prof2 = [1] * (len(var) - index_center)
 
     return prof1+prof2
 
@@ -34,6 +36,10 @@ def fuzzifier(value, var, T):
     for profile in T:
         ans.append(profile[var.index(value)])
     return ans
+
+# def defuzzifier(G, var):
+#     for i in enumerate(G)
+#     return value
 
 
 def fuzzy_control(value, theta, T):
@@ -74,6 +80,7 @@ def fuzzy_control(value, theta, T):
     plt.show()
 
     # Desborrosificación
+    
 
 
 def update(x, dt):
@@ -93,7 +100,9 @@ def update(x, dt):
 
 if __name__ == "__main__":
 
-    STEP = 5
+    T_STEP = 5
+    V_STEP = 0.001
+    A_STEP = 0.01
 
     #--------------------------------------------------
     # Constantes del modelo
@@ -142,19 +151,25 @@ if __name__ == "__main__":
     #   - theta: Nombre de la variable
     #   - T(theta): MN, N, Z, P, MP
     #   - U: rango de -90 a 90 grados sexagesimales
-    theta = list(range(-90, 90+STEP, STEP))
+    theta = arange(-90, 90+T_STEP, T_STEP)
+    v = arange(-0.05, 0.05+V_STEP, V_STEP)
+    a = arange(-0.2, 0.2+A_STEP, A_STEP)
+    print(theta)
+    print(v)
+    print(a)
 
     # Generación de conjuntos borrosos
-    MN = generate_profile(-60, STEP, theta, max=-30)
-    N = generate_profile(-30, STEP, theta, min=-60, max=0)
-    Z = generate_profile(0, STEP, theta, min=-30, max=30)
-    P = generate_profile(30, STEP, theta, min=0, max=60)
-    MP = generate_profile(60, STEP, theta, min=30)
+    MN = generate_profile(-60, theta, max=-30)
+    N = generate_profile(-30, theta, min=-60, max=0)
+    Z = generate_profile(0, theta, min=-30, max=30)
+    P = generate_profile(30, theta, min=0, max=60)
+    MP = generate_profile(60, theta, min=30)
     
     T = (MN, N, Z, P, MP)
     for i in T:
         plt.plot(theta, i)
+
     plt.grid()
     plt.show()
 
-    fuzzy_control(15, theta, T)
+    # fuzzy_control(20, theta, T)
