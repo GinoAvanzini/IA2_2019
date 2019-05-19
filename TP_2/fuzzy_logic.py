@@ -190,4 +190,22 @@ if __name__ == "__main__":
     ax1.grid()
 
     plt.show()
+
+    F_STEP = 0.5
+    F = []
+    F.append(arange(-5, 5+F_STEP, F_STEP))
+
+    # Generación de conjuntos borrosos de salida
+    F.append({})
+    F[1]['MN'] = generate_profile(-4, F[0], max=-2.5)
+    F[1]['N'] = generate_profile(-2, F[0], min=-4, max=0)
+    F[1]['Z'] = generate_profile(0, F[0], min=-2.5, max=2.5)
+    F[1]['P'] = generate_profile(2, F[0], min=0, max=4)
+    F[1]['MP'] = generate_profile(4, F[0], min=2.5)
+
+    for i in theta[1]:
+        plt.plot(F[0], F[1][i], label=i)
+    plt.grid()
+    plt.legend(loc="upper right")
+
     # fuzzy_control(20, theta, T)
