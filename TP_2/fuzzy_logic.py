@@ -51,6 +51,20 @@ def fuzzifier(value, fuzzy_set):
     return ans
 
 
+# Defuzzifier usando centro de gravedad (COG)
+def defuzzifier(F_out, F):
+
+    num = 0
+    den = 0
+    for pert, pos in zip(F_out, F):
+        num += pos*pert
+        den += pert
+
+    return F[F.searchsorted(num/den)]
+
+
+
+
 # Value es un array con los valores de theta y thetadot
 def fuzzy_control(value, theta, v, R, F):
 
@@ -85,9 +99,13 @@ def fuzzy_control(value, theta, v, R, F):
     
     plt.plot(F[0], F_out)
 
+
+    force = defuzzifier(F_out, F[0])
+
+    print(force)
     plt.show()
 
-    return F_out 
+    return force
 
 
 
@@ -269,7 +287,7 @@ if __name__ == "__main__":
 
     # print(fuzzifier(20, theta))
     # fuzzy_control(value, theta, v, R, F):
-    value = [20, -0.02]
+    value = [50, -0.02]
     fuzzy_control(value, theta, v, R, F)
 
     # fuzzy_control(20, theta, T)
