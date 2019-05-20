@@ -1,6 +1,6 @@
 
 from math import sin, cos, pow, pi
-from numpy import arange
+from numpy import arange, searchsorted, zeros
 from matplotlib import pyplot as plt
 
 from binary_search import binary_search
@@ -31,53 +31,102 @@ def generate_profile(center, var, min=None, max=None):
     return prof1+prof2
 
 
-def fuzzifier(value, var, T):
-    ans = []
-    for profile in T:
-        ans.append(profile[var.index(value)])
-    return ans
+# def fuzzifier(value, var, T):
+#     ans = []
+#     for profile in T:
+#         ans.append(profile[var.index(value)])
+#     return ans
 
 # def defuzzifier(G, var):
 #     for i in enumerate(G)
 #     return value
 
 
-def fuzzy_control(value, theta, T):
-    # Borrosificación
-    mu = fuzzifier(value, theta, T)
+def fuzzifier(value, fuzzy_set):
 
-    # Cálculo de antecedentes
-    # Por ahora es relación directa
+    ans = {}
+    for magnitud in fuzzy_set[1]:
+        ans[magnitud] = fuzzy_set[1][magnitud][fuzzy_set[0].searchsorted(value)]
 
-    # Truncado de conjuntos borrosos de salida 
-    # (RECORDAR: Por ahora los conjuntos de entrada y salida son los mismos,
-    # por eso se utiliza la misma variable)
-    newT = list(T)
-    for i, profile in enumerate(T):
-        for j, value in enumerate(profile):
-            if (mu[i] < value):
-                newT[i][j] = mu[i]
-            else:
-                newT[i][j] = value
+    return ans
 
-    for i in newT:
-        plt.plot(theta, i)
-    plt.grid()
+
+# Value es un array con los valores de theta y thetadot
+def fuzzy_control(value, theta, v, R, F):
+
+    mu_theta = fuzzifier(value[0], theta)
+    mu_thetadot = fuzzifier(value[1], v)
+
+    v_antec = {'MN': 0, 'N': 0, 'Z':0, 'P': 0, 'MP': 0}
+
+    for theta_r in R.keys():
+        for thetadot_r in R[theta_r].keys():
+            if (mu_thetadot[thetadot_r] == 0) or (mu_theta[theta_r] == 0):  # Usar isclose() para eliminar error de float
+                continue
+            
+            antec = min(mu_theta[theta_r], mu_thetadot[thetadot_r])
+
+            if (antec > v_antec[R[theta_r][thetadot_r]]):
+                v_antec[R[theta_r][thetadot_r]] = antec
+            
+    # Implicación/truncado de conjuntos de salida:
+    print(v_antec)
+    
+    F_out = zeros(len(F[0]))
+
+    for i in F[1].keys():
+        for j in range(0, len(F[0])):
+
+            min_temp = min(F[1][i][j], v_antec[i])
+
+            if (min_temp > F_out[j]):
+                F_out[j] = min_temp            
+
+    
+    plt.plot(F[0], F_out)
+
     plt.show()
 
-    # Disyunción/Unión de los conjuntos borrosos de salida
-    G = []
-    for i in range(0, len(theta)):
-        max_value = 0
-        for profile in T:
-            if (max_value < profile[i]):
-                max_value = profile[i]
-        G.append(max_value)
+    return F_out 
 
-    print(G, len(theta), len(G))
-    plt.plot(theta, G)
-    plt.grid()
-    plt.show()
+
+
+# def fuzzy_control(value, theta, v, T):
+#     # Borrosificación
+#     mu = fuzzifier(value, theta, T)
+
+#     # Cálculo de antecedentes
+#     # Por ahora es relación directa
+
+#     # Truncado de conjuntos borrosos de salida 
+#     # (RECORDAR: Por ahora los conjuntos de entrada y salida son los mismos,
+#     # por eso se utiliza la misma variable)
+#     newT = list(T)
+#     for i, profile in enumerate(T):
+#         for j, value in enumerate(profile):
+#             if (mu[i] < value):
+#                 newT[i][j] = mu[i]
+#             else:
+#                 newT[i][j] = value
+
+#     for i in newT:
+#         plt.plot(theta, i)
+#     plt.grid()
+#     plt.show()
+
+#     # Disyunción/Unión de los conjuntos borrosos de salida
+#     G = []
+#     for i in range(0, len(theta)):
+#         max_value = 0
+#         for profile in T:
+#             if (max_value < profile[i]):
+#                 max_value = profile[i]
+#         G.append(max_value)
+
+#     print(G, len(theta), len(G))
+#     plt.plot(theta, G)
+#     plt.grid()
+#     plt.show()
 
     # Desborrosificación
     
@@ -159,7 +208,7 @@ if __name__ == "__main__":
     # a = arange(-0.2, 0.2+A_STEP, A_STEP)
     for i in range(0, len(v[0])):
         v[0][i] = round(v[0][i], 3)
-    print(v[0])
+    # print(v[0])
 
     # Generación de conjuntos borrosos de entradas
     # Conjunto borroso de theta:
@@ -170,7 +219,6 @@ if __name__ == "__main__":
     theta[1]['P'] = generate_profile(30, theta[0], min=0, max=60)
     theta[1]['MP'] = generate_profile(60, theta[0], min=30)
     # Conjunto borroso de velocidad angular:
-    # Conjunto borroso de theta:
     v.append({})
     v[1]['MN'] = generate_profile(-0.04, v[0], max=-0.025)
     v[1]['N'] = generate_profile(-0.02, v[0], min=-0.04, max=0)
@@ -181,17 +229,17 @@ if __name__ == "__main__":
     fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(16, 5))
     for i in theta[1].values():
         ax0.plot(theta[0], i)
-        print(i)
+        # print(i)
     ax0.grid()
 
     for i in v[1].values():
         ax1.plot(v[0], i)
-        print(i)
+        # print(i)
     ax1.grid()
 
     plt.show()
 
-    F_STEP = 0.5
+    F_STEP = 0.25
     F = []
     F.append(arange(-5, 5+F_STEP, F_STEP))
 
@@ -203,9 +251,25 @@ if __name__ == "__main__":
     F[1]['P'] = generate_profile(2, F[0], min=0, max=4)
     F[1]['MP'] = generate_profile(4, F[0], min=2.5)
 
+    # Reglas de inferencia. R['MN']['P'] indica la magnitud de la fuerza 
+    # para theta MN y theta_dot P
+    R = {
+        'MN': {'MN': 'MN', 'N': 'MN', 'Z': 'MN', 'P': 'N', 'MP': 'Z'},
+        'N': {'MN': 'MN', 'N': 'MN', 'Z': 'N', 'P': 'Z', 'MP': 'P'},
+        'Z': {'MN': 'MN', 'N': 'N', 'Z': 'Z', 'P': 'P', 'MP': 'MP'},
+        'P': {'MN': 'N', 'N': 'Z', 'Z': 'P', 'P': 'MP', 'MP': 'MP'},
+        'MP': {'MN': 'Z', 'N': 'P', 'Z': 'MP', 'P': 'MP', 'MP': 'MP'}
+        }
     for i in theta[1]:
         plt.plot(F[0], F[1][i], label=i)
     plt.grid()
     plt.legend(loc="upper right")
+
+    # print(theta[0])
+
+    # print(fuzzifier(20, theta))
+    # fuzzy_control(value, theta, v, R, F):
+    value = [20, -0.02]
+    fuzzy_control(value, theta, v, R, F)
 
     # fuzzy_control(20, theta, T)
