@@ -108,6 +108,8 @@ if __name__ == "__main__":
     T_STEP = 0.001      # [rad]
     V_STEP = 0.005      # [rad/s]
     A_STEP = 0.01
+    F_STEP = 0.05
+
 
     #--------------------------------------------------
     # Constantes del modelo
@@ -144,10 +146,10 @@ if __name__ == "__main__":
     theta = []
     v = []
 
-    ang_vel = 8
+    ang_vel = 20
     force_mag = 10
     
-    theta.append(arange(-pi, pi+T_STEP, T_STEP))
+    theta.append(arange(-2*pi, 2*pi+T_STEP, T_STEP))
     v.append(arange(-ang_vel, ang_vel+V_STEP, V_STEP))
     for i in range(0, len(v[0])):
         v[0][i] = round(v[0][i], 3)
@@ -181,7 +183,6 @@ if __name__ == "__main__":
 
     plt.show()
 
-    F_STEP = 0.25
     F = []
     F.append(arange(-7*force_mag, 7*force_mag+F_STEP, F_STEP))
 
@@ -218,10 +219,11 @@ if __name__ == "__main__":
     x[2] = 0
 
     Force = 0
+    force_hist = []
 
     print(x)
 
-    while(t < 10):
+    while(t < 8):
 
         x = update(x, dt, Force)
 
@@ -232,6 +234,7 @@ if __name__ == "__main__":
         print(x)
         
         Force = fuzzy_control([x[0], x[1]], theta, v, R, F)
+        force_hist.append(Force)
         time.append(t)
 
         t += dt
@@ -244,6 +247,9 @@ if __name__ == "__main__":
     ax2.plot(time, acel)
     ax2.grid()
     
+    plt.show()
+    
+    plt.plot(time, force_hist)
     plt.show()
 
 
