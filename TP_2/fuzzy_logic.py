@@ -92,6 +92,8 @@ def update(x, dt, F):
 
     x_t = x
     
+        
+    
     num = g * sin(x[0]) + cos(x[0]) * (- F - m * l * pow(x[1], 2) * sin(x[0])) / (M + m)
     den = l * (4/3 - m * pow(cos(x[0]), 2) / (M + m))
 
@@ -99,6 +101,12 @@ def update(x, dt, F):
 
     x_t[1] = x[1] + x[2]*dt
     x_t[0] = x[0] + x[1]*dt + x[2]*pow(dt, 2)/2
+    
+    #if (x[0] > pi):
+        #x -= 2*pi
+    #elif (x[0] < -pi):
+        #x += 2*pi
+
 
     return x_t
 
@@ -146,7 +154,7 @@ if __name__ == "__main__":
     theta = []
     v = []
 
-    ang_vel = 20
+    ang_vel = 15
     force_mag = 10
     
     theta.append(arange(-2*pi, 2*pi+T_STEP, T_STEP))
@@ -166,11 +174,11 @@ if __name__ == "__main__":
 
     # Conjunto borroso de velocidad angular:
     v.append({})
-    v[1]['MN'] = generate_profile(-0.6*ang_vel, v[0], max=-0.25*ang_vel)
-    v[1]['N'] = generate_profile(-0.2*ang_vel, v[0], min=-0.5*ang_vel, max=0)
-    v[1]['Z'] = generate_profile(0, v[0], min=-0.25*ang_vel, max=0.25*ang_vel)
-    v[1]['P'] = generate_profile(0.2*ang_vel, v[0], min=0, max=0.5*ang_vel)
-    v[1]['MP'] = generate_profile(0.6*ang_vel, v[0], min=0.25*ang_vel)
+    v[1]['MN'] = generate_profile(-9, v[0], max=-3.75)
+    v[1]['N'] = generate_profile(-3.5, v[0], min=-6.5, max=-0.03*pi)
+    v[1]['Z'] = generate_profile(0, v[0], min=-3, max=3)
+    v[1]['P'] = generate_profile(3.5, v[0], min=0.03*pi, max=6.5)
+    v[1]['MP'] = generate_profile(9, v[0], min=3.75)
     
     fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(16, 5))
     for i in theta[1].values():
@@ -188,11 +196,11 @@ if __name__ == "__main__":
 
     # Generación de conjuntos borrosos de salida
     F.append({})
-    F[1]['MN'] = generate_profile(-5*force_mag, F[0], max=-3*force_mag)
-    F[1]['N'] = generate_profile(-2*force_mag, F[0], min=-3.5*force_mag, max=-0.5)
-    F[1]['Z'] = generate_profile(0, F[0], min=-2.5*force_mag, max=2.5*force_mag)
-    F[1]['P'] = generate_profile(2*force_mag, F[0], min=0.5, max=3.5*force_mag)
-    F[1]['MP'] = generate_profile(5*force_mag, F[0], min=3*force_mag)
+    F[1]['MN'] = generate_profile(-5*force_mag, F[0], max=-3.5*force_mag)
+    F[1]['N'] = generate_profile(-1.25*force_mag, F[0], min=-3.75*force_mag, max=0)
+    F[1]['Z'] = generate_profile(0, F[0], min=-1.5*force_mag, max=1.5*force_mag)
+    F[1]['P'] = generate_profile(1.25*force_mag, F[0], min=0, max=3.75*force_mag)
+    F[1]['MP'] = generate_profile(5*force_mag, F[0], min=3.5*force_mag)
 
     # Reglas de inferencia. R['MN']['P'] indica la magnitud de la fuerza 
     # para theta MN y theta_dot P
@@ -211,7 +219,7 @@ if __name__ == "__main__":
     plt.legend(loc="upper right")
 
 
-    cond_inic = [pi/4, pi/5]
+    cond_inic = [pi, 0]
     
     x = zeros(3)
     x[0] = cond_inic[0]
@@ -231,7 +239,7 @@ if __name__ == "__main__":
         vel.append(x[1])
         acel.append(x[2])
 
-        print(x)
+        #print(x)
         
         Force = fuzzy_control([x[0], x[1]], theta, v, R, F)
         force_hist.append(Force)
@@ -247,7 +255,6 @@ if __name__ == "__main__":
     ax2.plot(time, acel)
     ax2.grid()
     
-    plt.show()
     
     plt.plot(time, force_hist)
     plt.show()
