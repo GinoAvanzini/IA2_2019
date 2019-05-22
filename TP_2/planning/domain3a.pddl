@@ -5,7 +5,7 @@
     (:action fly :parameters (?p ?from ?to)
         :precondition (and (PLANE ?p) (AIRPORT ?from) (AIRPORT ?to)
         (at ?p ?from))
-        :effect (and (not (at ?p ?from)) (at ?p ?to)))
+        :effect (and (at ?p ?to) (not (at ?p ?from))))
     
     (:action load :parameters (?c ?p ?a)
         :precondition (and (LOAD ?c) (PLANE ?p) (AIRPORT ?a)
