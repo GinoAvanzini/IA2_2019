@@ -91,9 +91,7 @@ def fuzzy_control(value, theta, v, R, F):
 def update(x, dt, F):
 
     x_t = x
-    
-        
-    
+
     num = g * sin(x[0]) + cos(x[0]) * (- F - m * l * pow(x[1], 2) * sin(x[0])) / (M + m)
     den = l * (4/3 - m * pow(cos(x[0]), 2) / (M + m))
 
@@ -101,12 +99,6 @@ def update(x, dt, F):
 
     x_t[1] = x[1] + x[2]*dt
     x_t[0] = x[0] + x[1]*dt + x[2]*pow(dt, 2)/2
-    
-    #if (x[0] > pi):
-        #x -= 2*pi
-    #elif (x[0] < -pi):
-        #x += 2*pi
-
 
     return x_t
 
@@ -129,7 +121,7 @@ if __name__ == "__main__":
     M = 2       # [Kg]      Masa del carro
     #--------------------------------------------------
 
-    dt = 0.1
+    dt = 0.05
     t = 0
 
     pos = []
@@ -219,7 +211,7 @@ if __name__ == "__main__":
     plt.legend(loc="upper right")
 
 
-    cond_inic = [pi, 0]
+    cond_inic = [pi/4, pi/8]
     
     x = zeros(3)
     x[0] = cond_inic[0]
@@ -238,8 +230,6 @@ if __name__ == "__main__":
         pos.append(x[0])
         vel.append(x[1])
         acel.append(x[2])
-
-        #print(x)
         
         Force = fuzzy_control([x[0], x[1]], theta, v, R, F)
         force_hist.append(Force)
