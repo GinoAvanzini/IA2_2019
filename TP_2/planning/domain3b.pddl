@@ -2,7 +2,7 @@
     (:predicates (CUERPO ?x) (HERRAMIENTA ?x) 
         (ARMARIO ?x) (HUSILLO ?x) (DIRECCION ?x)
         (AGUJERO ?x) (RANURA ?x)
-        (en ?x ?y) (vinculo ?x ?y))
+        (en ?x ?y) (vinculo ?x ?y) (pos ?r ?s))
 
     (:action cambio-herramienta :parameters (?h1 ?h2 ?a ?m)
         :precondition (and (HERRAMIENTA ?h1) 
@@ -12,8 +12,8 @@
         (en ?h2 ?a) (not (en ?h2 ?m))))
     
     (:action rotacion-pieza :parameters (?p ?s)
-        :precondition (and (CUERPO ?p) (DIRECCION ?s) (en ?p ?s))
-        :effect (and (not (en ?p ?s))))
+        :precondition (and (CUERPO ?p) (DIRECCION ?s) (not (en ?p ?s)))
+        :effect (and (en ?p ?s)))
     
     (:action agujerear :parameters (?p ?h ?m ?a)
         :precondition (and (CUERPO ?p)
@@ -23,8 +23,8 @@
         :effect (and (en ?p ?a))
     )
 
-    (:action fresar :parameters (?p ?h ?m ?r)
-        :precondition (and (CUERPO ?p)
+    (:action fresar :parameters (?p ?h ?m ?r ?s)
+        :precondition (and (CUERPO ?p) (DIRECCION ?s)
         (HERRAMIENTA ?h) (RANURA ?r) (HUSILLO ?m) 
         (vinculo ?h ?r)
         (not (en ?p ?r)) (en ?h ?m))
