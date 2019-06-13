@@ -266,115 +266,90 @@ def printMap(map_kohonen):
 
 if __name__ == "__main__":
 
-    dataset = get_data('train.csv')
+    data = get_data('train.csv')
 
-    SUP = int(0.66 * len(dataset))
-    train_dataset = dataset[:SUP]
-    test_dataset = dataset[SUP:]
+    map_kohonen = np.zeros((20, 20)) # Mapa de neuronas
+    for i in range(map_kohonen.shape[0]):
+        for j in range(map_kohonen.shape[1]):
+            map_kohonen[i, j] = -1
 
-    for trunc in range(1, 4):
-        LIMIT = int(trunc * len(train_dataset) / 4)
-        data = train_dataset[:LIMIT]
+    W = np.zeros((map_kohonen.shape[0], map_kohonen.shape[1], data[0][1].shape[0]))
 
-        map_kohonen = np.zeros((20, 20)) # Mapa de neuronas
-        for i in range(map_kohonen.shape[0]):
-            for j in range(map_kohonen.shape[1]):
-                map_kohonen[i, j] = -1
+    mu = 0
+    sigma = 1
 
-        W = np.zeros((map_kohonen.shape[0], map_kohonen.shape[1], data[0][1].shape[0]))
+    for i in range(W.shape[0]):
+        for j in range(W.shape[1]):
+            W[i, j, :] = abs(0.01 * np.random.normal(mu, sigma, W.shape[2]))
 
-        mu = 0
-        sigma = 1
+    MAX = int(0.66 * len(data))
+    train = data[:MAX]
+    test = data[MAX:]
+
+    print(len(data), len(train), len(test))
+
+    t = 0
+    printProgressBar(t, len(train))
+    for [_, x] in train:
+
+        g = winner(W, x)
 
         for i in range(W.shape[0]):
             for j in range(W.shape[1]):
-                W[i, j, :] = abs(0.01 * np.random.normal(mu, sigma, W.shape[2]))
+                W[i, j, :] = update_w(W[i, j, :], x, [i, j], g, t, lvq=1)
 
-        MAX = int(0.66 * len(data))
-        train = data[:MAX]
-        test = data[MAX:]
-
-        print(len(data), len(train), len(test))
-
-        t = 0
-        printProgressBar(t, len(train))
-        for [_, x] in train:
-
-            g = winner(W, x)
-
-            for i in range(W.shape[0]):
-                for j in range(W.shape[1]):
-                    W[i, j, :] = update_w(W[i, j, :], x, [i, j], g, t, lvq=1)
-
-            t += 1
-            printProgressBar(t, len(train))
-
-
-        sample = []
-        ctrl = list(range(0, 10))
-        for [label, x] in train:
-            label = int(label)
-            if (label in ctrl):
-                ctrl.remove(label)
-                sample.append([label, x])
-            if not ctrl:
-                break
-
-
-        # def r_aux(a):
-        #     return 2
-
-        # for [label, x] in sample:
-        #     g = winner(W, x)
-        #     for i in range(W.shape[0]):
-        #         for j in range(W.shape[1]):
-        #             if (vecindad([i, j], g, 0, R=r_aux)):
-        #                 map_kohonen[i, j] = int(label)
-
-        map_kohonen = kmeans(map_kohonen, W, sample)
-
-
-        t = 0
+        t += 1
         printProgressBar(t, len(train))
 
-        for [label, x] in train:
 
-            label = int(label)
-            [i, j] = winner(W, x)
+    sample = []
+    ctrl = list(range(0, 10))
+    for [label, x] in train:
+        label = int(label)
+        if (label in ctrl):
+            ctrl.remove(label)
+            sample.append([label, x])
+        if not ctrl:
+            break
 
-            if (map_kohonen[i, j] == label):
-                lvq_c = 1
-            else:
-                lvq_c = -1
 
-            W[i, j, :] +=  W[i, j, :] + lvq_c * 0.01 * (x - W[i, j, :])
+    # def r_aux(a):
+    #     return 2
 
-            t += 1
-            printProgressBar(t, len(train))
+    # for [label, x] in sample:
+    #     g = winner(W, x)
+    #     for i in range(W.shape[0]):
+    #         for j in range(W.shape[1]):
+    #             if (vecindad([i, j], g, 0, R=r_aux)):
+    #                 map_kohonen[i, j] = int(label)
 
-        print(map_kohonen)
+    map_kohonen = kmeans(map_kohonen, W, sample)
 
-        t = 0
-        printProgressBar(t, len(test))
-
-        for [label, x] in test:
-
-            label = int(label)
-            [i, j] = winner(W, x)
-
-            if (map_kohonen[i, j] == label):
-                t +=1
-
-            printProgressBar(t, len(test))
-
-        print(t)
-
-        len(test)
 
     t = 0
-    printProgressBar(t, len(test_dataset))
+    printProgressBar(t, len(train))
 
-    for [label, x] in test_dataset:
+    for [label, x] in train:
+
+        label = int(label)
+        [i, j] = winner(W, x)
+
+        if (map_kohonen[i, j] == label):
+            lvq_c = 1
+        else:
+            lvq_c = -1
+
+        W[i, j, :] +=  W[i, j, :] + lvq_c * 0.01 * (x - W[i, j, :])
+
+        t += 1
+        printProgressBar(t, len(train))
+
+    print(map_kohonen)
+
+    t = 0
+    printProgressBar(t, len(test))
+
+    for [label, x] in test:
 
         label = int(label)
         [i, j] = winner(W, x)
@@ -382,9 +357,9 @@ if __name__ == "__main__":
         if (map_kohonen[i, j] == label):
             t +=1
 
-        printProgressBar(t, len(test_dataset))
+        printProgressBar(t, len(test))
 
     print(t)
 
-    len(test_dataset)
+    len(test)
 
