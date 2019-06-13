@@ -89,7 +89,7 @@ if __name__ == "__main__":
     NEURONAS_SALIDA = 1
 
     EPS = 0.01
-    EPOCHS = 12
+    EPOCHS = 15
 
     EJEMPLOS = 1
     # ------------------
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     data_train = data[0:3500]
     t_train = t[0:3500]
-    INDEX_TRAIN = 3500
+    INDEX_TRAIN = 4200
 
     data_valid = data[3501:4200]
     t_valid = t[3501:4200]
@@ -235,8 +235,8 @@ if __name__ == "__main__":
     t_obtenido = []
     
     k = 0
-    print("TEST: ", 0)
-    for j in range(INDEX_VALID + 1, INDEX_TEST):
+    print("\nTEST: ")
+    for j in range(INDEX_TRAIN + 1, INDEX_TEST):
 
         k += 1
         xbc = data[j, :]
@@ -250,6 +250,6 @@ if __name__ == "__main__":
 
 
     # shufleo
-    # print(t_esperado)
-    # print(t_obtenido)
+    print(t_esperado[-1])
+    print(t_obtenido[-1])
 
