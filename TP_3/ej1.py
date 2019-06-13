@@ -68,7 +68,7 @@ def salida_red(Wji, Wkj, theta_j, theta_k, x, y, z):
 
 
 # def calc_rendimiento(t_obtenido, t_esperado, media_t):
-def calc_rendimiento(t_obtenido, t_esperado, n):
+def calc_rendimiento(t_obtenido, t_esperado, k):
 
     # num = np.sum(np.square(t_obtenido - t_esperado))
     # den = np.sum(np.square(t_esperado - media_t))
@@ -77,7 +77,7 @@ def calc_rendimiento(t_obtenido, t_esperado, n):
 
     num = np.sum(np.abs(t_obtenido - t_esperado))
 
-    return num/k
+    return (num/k)
 
 
 if __name__ == "__main__":
@@ -85,11 +85,11 @@ if __name__ == "__main__":
     # ------------------
     # Variables 
     NEURONAS_ENTRADA = 5
-    NEURONAS_CAPA_OCULTA = 15
+    NEURONAS_CAPA_OCULTA = 20
     NEURONAS_SALIDA = 1
 
-    EPS = 0.1
-    EPOCHS = 10
+    EPS = 0.01
+    EPOCHS = 12
 
     EJEMPLOS = 1
     # ------------------
@@ -108,11 +108,16 @@ if __name__ == "__main__":
     media = []
     std_dev = []
 
+
     for i in range(0, data[0, :].size):
         media.append(np.mean(data[:, i]))
         data[:, i] = data[:, i] - media[i]
         std_dev.append(np.std(data[:, i]))
         data[:, i] = data[:, i]/std_dev[i]
+
+    # print(data)
+    print("media", media)
+    print("std_dev", std_dev)
 
     media_t = []
     std_dev_t = []
@@ -121,6 +126,9 @@ if __name__ == "__main__":
         t[j, :] = t[j, :] - media_t[j]
         std_dev_t.append(np.std(t[j, :]))
         t[j, :] = t[j, :]/std_dev_t[j]
+    # print(t)
+    print("media_t", media_t)
+    print("std_dev", std_dev_t)
 
     data_train = data[0:3500]
     t_train = t[0:3500]
@@ -132,8 +140,9 @@ if __name__ == "__main__":
 
     data_test = data[4201:-1]
     t_test = t[4201:-1]
+    INDEX_TEST = 5000
 
-    print(t_train.shape, t_valid.shape, t_test.shape, t.shape)
+    # print(t_train.shape, t_valid.shape, t_test.shape, t.shape)
 
     # x = np.zeros((EJEMPLOS, NEURONAS_ENTRADA), dtype=np.float64)
     x = np.zeros((1, NEURONAS_ENTRADA), dtype=np.float64)
@@ -165,24 +174,29 @@ if __name__ == "__main__":
 
 
     tprueba = t_train[0, 1]
-    print(tprueba)
+    # print(tprueba)
 
     y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xprueba, y, z)
     
-    print(tprueba, ex)
+    # print(tprueba, ex)
 
     backprop(Wji, Wkj, theta_j, theta_k, xprueba, y, z, tprueba, EPS)
     
     
     y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xprueba, y, z)
     
-    print(tprueba, ex)
+    # print(tprueba, ex)
 
+    xbc = data[0, :]
+    xbc.shape = (1, NEURONAS_ENTRADA)
 
 
     # ----- TRAINING -----
     for epoch in range(0, EPOCHS):
         k = 0
+
+        # t_esperado = np.zeros((10,))
+        # t_obtenido = np.zeros((10,))
 
         t_esperado = []
         t_obtenido = []
@@ -199,14 +213,15 @@ if __name__ == "__main__":
             xbc.shape = (1, NEURONAS_ENTRADA)
 
             y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xbc, y, z)
-            t_obtenido.append(ex)
+            t_obtenido.append(ex[0, 0])
             t_esperado.append(t[0, j])
-            
             backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)
-        
+            # print(Wji)
+            # print(Wkj)
+            
 
         # ----- VALIDATION -----
-        print("error", 1 - calc_rendimiento(np.asarray(t_obtenido), np.asarray(t_esperado), k))
+        print("error", calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
         # shufleo
         # print(t_esperado)
         # print(t_obtenido)
@@ -215,3 +230,26 @@ if __name__ == "__main__":
 
 
     # ----- TEST -----
+
+    t_esperado = []
+    t_obtenido = []
+    
+    k = 0
+    print("TEST: ", 0)
+    for j in range(INDEX_VALID + 1, INDEX_TEST):
+
+        k += 1
+        xbc = data[j, :]
+        xbc.shape = (1, NEURONAS_ENTRADA)
+
+        y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xbc, y, z)
+        t_obtenido.append(ex[0, 0])
+        t_esperado.append(t[0, j])
+
+    print("error test", calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
+
+
+    # shufleo
+    # print(t_esperado)
+    # print(t_obtenido)
+
