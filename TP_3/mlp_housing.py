@@ -91,18 +91,21 @@ if __name__ == "__main__":
     EPS = 0.01
     EPOCHS = 15
 
-    EJEMPLOS = 1
+    INDEX_TRAIN = 4200
+    INDEX_VALID = 4200
+    INDEX_TEST = 5000
+
     # ------------------
 
-    data = pd.read_csv("./USA_Housing.csv")
+    data = pd.read_csv("./datasets/USA_Housing.csv")
     data = data.drop(data.columns[6], axis=1)
 
     t = np.asarray(data['Price'], dtype=np.float64)
     t.shape = (NEURONAS_SALIDA, t.size)
 
+    # En data solo guardo las entradas
     data = data.drop(data.columns[5], axis=1)
-
-    data = np.asarray(data);
+    data = np.asarray(data)
 
     # Normalización
     media = []
@@ -110,9 +113,9 @@ if __name__ == "__main__":
 
 
     for i in range(0, data[0, :].size):
-        media.append(np.mean(data[:, i]))
+        media.append(np.mean(data[0:INDEX_TRAIN, i]))
         data[:, i] = data[:, i] - media[i]
-        std_dev.append(np.std(data[:, i]))
+        std_dev.append(np.std(data[0:INDEX_TRAIN, i]))
         data[:, i] = data[:, i]/std_dev[i]
 
     # print(data)
@@ -128,23 +131,18 @@ if __name__ == "__main__":
         t[j, :] = t[j, :]/std_dev_t[j]
     # print(t)
     print("media_t", media_t)
-    print("std_dev", std_dev_t)
+    print("std_dev_t", std_dev_t)
 
     data_train = data[0:3500]
     t_train = t[0:3500]
-    INDEX_TRAIN = 4200
 
     data_valid = data[3501:4200]
     t_valid = t[3501:4200]
-    INDEX_VALID = 4200
 
     data_test = data[4201:-1]
     t_test = t[4201:-1]
-    INDEX_TEST = 5000
 
-    # print(t_train.shape, t_valid.shape, t_test.shape, t.shape)
-
-    # x = np.zeros((EJEMPLOS, NEURONAS_ENTRADA), dtype=np.float64)
+    # 
     x = np.zeros((1, NEURONAS_ENTRADA), dtype=np.float64)
     y = np.zeros((1, NEURONAS_CAPA_OCULTA), dtype=np.float64)
     z = np.zeros((1, NEURONAS_SALIDA), dtype=np.float64)
@@ -153,9 +151,7 @@ if __name__ == "__main__":
     Wji = np.asarray([[(2*np.random.random_sample() - 1) \
         for i in range(NEURONAS_CAPA_OCULTA)] \
             for j in range(NEURONAS_ENTRADA)], dtype=np.float64)
-    # theta_j = np.asarray([(2*np.random.random_sample() - 1) \
-    #     for i in range(NEURONAS_CAPA_OCULTA)], dtype=np.float64)
-    # theta_j = np.asarray(0.01 for i in range(NEURONAS_CAPA_OCULTA), dtype=np.float64)
+
     theta_j = 0.01*np.ones((1, NEURONAS_CAPA_OCULTA), dtype=np.float64)
     theta_j.shape = (1, theta_j.size)
 
@@ -164,8 +160,6 @@ if __name__ == "__main__":
         for i in range(NEURONAS_SALIDA)] \
             for j in range(NEURONAS_CAPA_OCULTA)], dtype=np.float64)
 
-    # theta_k = np.asarray([(2*np.random.random_sample() - 1) \
-    #     for i in range(NEURONAS_SALIDA)], dtype=np.float64)
     theta_k = 0.01*np.ones((1, NEURONAS_SALIDA), dtype=np.float64)
     theta_k.shape = (1, theta_k.size)
 
@@ -215,10 +209,7 @@ if __name__ == "__main__":
             y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xbc, y, z)
             t_obtenido.append(ex[0, 0])
             t_esperado.append(t[0, j])
-            backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)
-            # print(Wji)
-            # print(Wkj)
-            
+            backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)            
 
         # ----- VALIDATION -----
         print("error", calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
