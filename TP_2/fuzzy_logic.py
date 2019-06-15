@@ -1,7 +1,8 @@
 
 from math import sin, cos, pow, pi
-from numpy import arange, searchsorted, zeros
+from numpy import arange, searchsorted, zeros, random
 from matplotlib import pyplot as plt
+import csv
 
 from binary_search import binary_search
 
@@ -248,6 +249,38 @@ if __name__ == "__main__":
     
     plt.plot(time, force_hist)
     plt.show()
-
+    
+    
+    # --------
+    # Generación de dataset para entrenar la red neuronal del MLP del TP3ej1
+    # --------
+    
+    #n_ejemplos = 10000
+    
+    #mean_theta = 0
+    #sigma_theta = pi/3
+    #mean_thetadot = 0
+    #sigma_thetadot = 6
+    
+    #with open('../TP_3/datasets/pendulum.csv', 'w') as pendulumcsv:
+        #pendcsv = csv.writer(pendulumcsv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        #pendcsv.writerow(['Angulo', 'Velocidad Angular', 'Fuerza'])
+        
+        #i = 0
+        #while (i < n_ejemplos):
+            #i += 1
+            #theta_sample = random.normal(mean_theta, sigma_theta)
+            #if (theta_sample < -pi) or (theta_sample > pi):
+                #i -= 1
+                #continue
+            
+            #thetadot_sample = random.normal(mean_thetadot, sigma_thetadot)
+            #if (thetadot_sample > ang_vel) or (thetadot_sample < -ang_vel):
+                #i -= 1
+                #continue
+            
+            #force = fuzzy_control([theta_sample, thetadot_sample], theta, v, R, F)
+            #pendcsv.writerow([theta_sample, thetadot_sample, force])
+            
 
 #
