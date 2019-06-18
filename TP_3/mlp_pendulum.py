@@ -28,14 +28,14 @@ if __name__ == "__main__":
     # ------------------
     # Variables 
     NEURONAS_ENTRADA = 2
-    NEURONAS_CAPA_OCULTA = 20
+    NEURONAS_CAPA_OCULTA = 15
     NEURONAS_SALIDA = 1
 
-    EPS = 0.01
-    EPOCHS = 7
+    EPS = 0.025
+    EPOCHS = 30
 
-    INDEX_TRAIN = 8400
-    INDEX_VALID = 8400
+    INDEX_TRAIN = 6000
+    INDEX_VALID = 8000
     INDEX_TEST = 10000      # Total de ejemplos en el dataset
     # ------------------
 
@@ -47,11 +47,10 @@ if __name__ == "__main__":
     # En data solo guardo las entradas
     data = data.drop(data.columns[2], axis=1)
     data = np.asarray(data)
-
+    
     # Normalización
     media = []
     std_dev = []
-
 
     for i in range(0, data[0, :].size):
         media.append(np.mean(data[0:INDEX_TRAIN, i]))
@@ -65,11 +64,11 @@ if __name__ == "__main__":
     media_t = []
     std_dev_t = []
     for j in range(0, t[:, 0].size):
-        media_t.append(np.mean(t[j, :]))
+        media_t.append(np.mean(t[j, 0:INDEX_TRAIN]))
         t[j, :] = t[j, :] - media_t[j]
-        std_dev_t.append(np.std(t[j, :]))
+        std_dev_t.append(np.std(t[j, 0:INDEX_TRAIN]))
         t[j, :] = t[j, :]/std_dev_t[j]
-    # print(t)
+
     print("media_t", media_t)
     print("std_dev_t", std_dev_t)
 
@@ -93,7 +92,10 @@ if __name__ == "__main__":
     theta_k = 0.01*np.ones((1, NEURONAS_SALIDA), dtype=np.float64)
     theta_k.shape = (1, theta_k.size)
 
-    
+
+    error_training = []
+    error_validation = []
+
     # ----- TRAINING -----
     for epoch in range(0, EPOCHS):
         k = 0
@@ -113,20 +115,49 @@ if __name__ == "__main__":
             t_esperado.append(t[0, j])
             backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)            
 
-        # ----- VALIDATION -----
-        print("error", calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
-        # print(t_esperado)
-        # print(t_obtenido)
+        # ----- error -----
+        error_training.append(calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
+        print("error training", error_training[-1])
 
+        k = 0
+        t_esperado = []
+        t_obtenido = []
+
+        # ----- VALIDATION -----
+        for j in range(INDEX_TRAIN + 1 , INDEX_VALID):
+
+            k += 1
+            xbc = data[j, :]
+            xbc.shape = (1, NEURONAS_ENTRADA)
+
+            y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xbc, y, z)
+            t_obtenido.append(ex[0, 0])
+            t_esperado.append(t[0, j])
+            backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)            
+
+        # ----- error -----
+        error_validation.append(calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
+        print("error validation", error_validation[-1])
+        
+        if (epoch > 1) and (np.abs((error_validation[-1] - error_validation[-2]))/error_validation[-2] < 0.005):
+            EPOCHS = epoch + 1
+            break;
+
+
+    plt.plot(range(EPOCHS), error_training, label='Error de training')
+    plt.plot(range(EPOCHS), error_validation, label='Error de validation')
+    plt.xlabel('Epochs')
+    plt.ylabel('Error promedio en desviaciones estándar')
+    
+    plt.legend()
 
     # ----- TEST -----
-
     t_esperado = []
     t_obtenido = []
     
     k = 0
     print("\nTEST: ")
-    for j in range(INDEX_TRAIN + 1, INDEX_TEST):
+    for j in range(INDEX_VALID + 1, INDEX_TEST):
 
         k += 1
         xbc = data[j, :]
@@ -155,7 +186,7 @@ if __name__ == "__main__":
     M = 2       # [Kg]      Masa del carro
     # ---
 
-    dt = 0.001
+    dt = 0.005
     t = 0
 
     pos = []
@@ -163,7 +194,7 @@ if __name__ == "__main__":
     acel = []
     time = []
 
-    cond_inic = [np.pi/10, 0]
+    cond_inic = [np.pi/6, 0]
     
     x = np.zeros(3)
     x[0] = cond_inic[0]
@@ -173,12 +204,10 @@ if __name__ == "__main__":
     Force = np.zeros((1, 1))
     force_hist = []
 
-    print(std_dev_t[0].dtype)
-    print(Force.dtype)
+    plt.show()
+    #exit()
 
-    # exit()
-
-    while(t < 8):
+    while(t < 20):
 
         x = update(x, dt, Force[0, 0])
 
@@ -195,20 +224,23 @@ if __name__ == "__main__":
         Force[0, 0] += media_t
         force_hist.append(Force[0, 0])
         time.append(t)
-        # print(Force)
-
-        # print(t)
 
         t += dt
 
     fig, (ax0, ax1, ax2) = plt.subplots(1, 3, figsize=(16, 5))
     ax0.plot(time, pos)
+    #ax0.xlabel('Tiempo')
+    #ax0.ylabel('Posición angular')
     ax0.grid()
     ax1.plot(time, vel)
+    #ax1.xlabel('Tiempo')
+    #ax1.ylabel('Velocidad angular')
     ax1.grid()
-    ax2.plot(time, acel)
+    ax2.plot(time, acel, label='Aceleración angular')
+    #ax2.xlabel('Tiempo')
+    #ax2.ylabel('Alpha/Fuerza')
     ax2.grid()
     
-    # print(force_hist)
-    plt.plot(time, force_hist)
+    plt.plot(time, force_hist, label='Fuerza')
+    plt.legend()
     plt.show()
