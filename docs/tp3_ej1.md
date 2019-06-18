@@ -47,7 +47,7 @@ La cantidad de epochs de entrenamiento fue variable pero finalmente nos decantam
 
 ## Uso en la prediccion de valor de las casas
 
-Con el algoritmo ya hecho se prosiguió a entrenar la red con el dataset de USA Housing, compuesto por 5000 ejemplos. Este se dividió en training (0-3500), validation (3501-4200) y test (4201-5000). Seteamos la cantidad de neuronas de la capa oculta a 25 y la cantidad de epochs a 25 y variamos el ritmo de aprendizaje. Se observó que para un ritmo de aprendizaje mayor empezaba a aumentar el error. Se hicieron pruebas con distintas cantidades de neuronas en la capa oculta y no encontramos un gran impacto en la performance. 
+Con el algoritmo ya hecho se prosiguió a entrenar la red con el dataset de USA Housing, compuesto por 5000 ejemplos. Este se dividió en training (0-3500), validation (3501-4200) y test (4201-5000). Seteamos la cantidad de neuronas de la capa oculta a 25 y la cantidad de epochs a 25 y variamos el ritmo de aprendizaje. Se observó que para un ritmo de aprendizaje mayor empezaba a aumentar el error. Se hicieron pruebas con distintas cantidades de neuronas en la capa oculta y no encontramos un gran impacto en la performance. A continuación vemos la gráfica de error vs epochs para epsilon de 0.05 y 0.01.
 
 ![EPSILON = 0.05](mlp_imgs/error_eps005.png)
 
@@ -71,12 +71,35 @@ Lo que en dólares se traduce a:
 
 E implica una diferencia de 14611 dólares, lo que es un 1.1% de diferencia. 
 
-## Uso en el controlador difuso
+## Uso en el control de un péndulo invertido
 
+En este caso se desea realizar el control de posición del péndulo invertido trabajado en el TP 2. Allí se realizó un control mediante lógica difusa en el cual para cada valor de posición y velocidad angular, se devolvía un valor de fuerza que se debía aplicar. Cada cierto delta de tiempo se actualizaba el modelo para esa fuerza obtenida y con los nuevos valores de posición y velocidad se encontraba un nuevo valor de fuerza. Se proseguía hasta tener el péndulo en la posición vertical, totalmente estable. 
 
+Lo que se intenta hacer en este ejercicio es, a partir de un dataset generado por los valores de posición, velocidad y fuerza obtenidos mediante el controlador difuso, entrenar la red neuronal y utilizar esta última como controlador. Así es que al final veremos la performance del MLP en su intento de colocar el péndulo en posición vertical, estable.
 
 ### Generación del dataset
 
+Para generar los datos a usar en el entrenamiento, validación y test del MLP se eligieron al azar 10000 pares de valores ángulo-velocidad de forma aleatoria con dos distribuciones normales con media cero. Las desviaciones estándar, para obtener valores dispersos pero representativos fueron de pi/3 radianes y de 6 radianes respectivamente. Con ese par de valores se ingresa al controlador difuso y se guarda el valor de fuerza que devuelve. 
+
+El dataset se dividió en entrenamiento (0-6000), validación (6001-8000) y test (8001-10000) y se le aplicaron los mismos métodos de normalización que al dataset de USA Housing. De esta forma, todos los valores están expresados en cantidad de desviaciones estándar por fuera de la media del campo, ya sea ángulo, velocidad o fuerza (respecto al conjunto de training). 
+
 ### Entrenamiento
 
-### Resultados 
+Igual que con el anterior dataset, se variaron el ritmo de aprendizaje y la cantidad de neuronas en la capa oculta. La variación de este último parámetro no generó prácticamente ningún impacto en la performance de la red por lo que se dejó en 15. Se comenzó además con 50 epochs variando el ritmo de aprendizaje. Encontramos que el mejor valor fue de EPSILON = 0.025 ya que valores menores tardaban mucho y valores mayores comenzaban a diverger. A continuación vemos la gráfica de error vs epochs para epsilon de 0.075 y 0.025.
+
+![EPSILON = 0.075](mlp_imgs/pendulum_50epochs_eps0075.png)
+
+![EPSILON = 0.025](mlp_imgs/pendulum_50epochs_eps0025.png)
+
+Una vez seteado el ritmo de aprendizaje decidimos entrenar epochs hasta que la diferencia relativa del promedio absoluto del error entre una epoch y otra, para el conjunto de validación, sea menor al 0.5%. El resultado obtenido fue el siguiente
+
+![EPSILON = 0.025, epochs = 24](mlp_imgs/pendulum_epochsfixed_eps0025.png)
+
+El valor de accuracy para el conjunto de test fue de 0.0888, valor expresado en desviaciones estándar absolutas promedio por encima de la media. Esto implica un error de 8,88% desviaciones estándar, lo que equivale a 3,4N. 
+
+### Control del péndulo
+
+Finalmente probamos controlar el péndulo con la red neuronal recién entrenada. Elegimos arbitrariamente una condición inicial de theta = pi/6 rad = 30° con velocidad inicial nula. En el gráfico vemos posición, velocidad, y aceleración angulares. Se observa que el control con la red neuronal no es rápido comparado con el controlador difuso, en el cual en menos de 2 segundos ya se estabilizaba. Además se puede notar que existe un pequeño error de estado estable el cual podría ser solucionado agregandole al controlador una acción integral que lo corrija. 
+
+![Posición, velocidad y aceleración angulares y fuerza](mlp_imgs/control_pendulo_mlp.png)
+
