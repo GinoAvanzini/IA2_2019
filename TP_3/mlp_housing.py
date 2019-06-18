@@ -1,6 +1,7 @@
 
 import pandas as pd
 import numpy as np
+from matplotlib import pyplot as plt
 
 from math import sqrt
 
@@ -85,13 +86,13 @@ if __name__ == "__main__":
     # ------------------
     # Variables 
     NEURONAS_ENTRADA = 5
-    NEURONAS_CAPA_OCULTA = 20
+    NEURONAS_CAPA_OCULTA = 25
     NEURONAS_SALIDA = 1
 
     EPS = 0.01
     EPOCHS = 15
 
-    INDEX_TRAIN = 4200
+    INDEX_TRAIN = 3500
     INDEX_VALID = 4200
     INDEX_TEST = 5000
 
@@ -118,7 +119,6 @@ if __name__ == "__main__":
         std_dev.append(np.std(data[0:INDEX_TRAIN, i]))
         data[:, i] = data[:, i]/std_dev[i]
 
-    # print(data)
     print("media", media)
     print("std_dev", std_dev)
 
@@ -129,7 +129,7 @@ if __name__ == "__main__":
         t[j, :] = t[j, :] - media_t[j]
         std_dev_t.append(np.std(t[j, :]))
         t[j, :] = t[j, :]/std_dev_t[j]
-    # print(t)
+
     print("media_t", media_t)
     print("std_dev_t", std_dev_t)
 
@@ -161,36 +161,15 @@ if __name__ == "__main__":
             for j in range(NEURONAS_CAPA_OCULTA)], dtype=np.float64)
 
     theta_k = 0.01*np.ones((1, NEURONAS_SALIDA), dtype=np.float64)
-    theta_k.shape = (1, theta_k.size)
-
-    xprueba = data_train[1, :]
-    xprueba.shape = (1, NEURONAS_ENTRADA)
-
-
-    tprueba = t_train[0, 1]
-    # print(tprueba)
-
-    y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xprueba, y, z)
+    theta_k.shape = (1, theta_k.size)    
     
-    # print(tprueba, ex)
 
-    backprop(Wji, Wkj, theta_j, theta_k, xprueba, y, z, tprueba, EPS)
-    
-    
-    y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xprueba, y, z)
-    
-    # print(tprueba, ex)
-
-    xbc = data[0, :]
-    xbc.shape = (1, NEURONAS_ENTRADA)
-
+    error_training = []
+    error_validation = []
 
     # ----- TRAINING -----
     for epoch in range(0, EPOCHS):
         k = 0
-
-        # t_esperado = np.zeros((10,))
-        # t_obtenido = np.zeros((10,))
 
         t_esperado = []
         t_obtenido = []
@@ -199,10 +178,6 @@ if __name__ == "__main__":
         for j in range(0, INDEX_TRAIN):
 
             k += 1            
-            # if (k > BATCHSIZE):
-            #     k = 0
-            #     # backprop
-            # print(t[0, j])
             xbc = data[j, :]
             xbc.shape = (1, NEURONAS_ENTRADA)
 
@@ -211,14 +186,41 @@ if __name__ == "__main__":
             t_esperado.append(t[0, j])
             backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)            
 
+        # ----- error -----
+        error_training.append(calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
+        print("error training", error_training[-1])
+        
+        k = 0
+        t_esperado = []
+        t_obtenido = []
+
         # ----- VALIDATION -----
-        print("error", calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
-        # shufleo
-        # print(t_esperado)
-        # print(t_obtenido)
+        for j in range(INDEX_TRAIN + 1 , INDEX_VALID):
+
+            k += 1
+            xbc = data[j, :]
+            xbc.shape = (1, NEURONAS_ENTRADA)
+
+            y, ex = salida_red(Wji, Wkj, theta_j, theta_k, xbc, y, z)
+            t_obtenido.append(ex[0, 0])
+            t_esperado.append(t[0, j])
+            backprop(Wji, Wkj, theta_j, theta_k, xbc, y, z, t[0, j], EPS)            
+
+        # ----- error -----
+        error_validation.append(calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
+        print("error validation", error_validation[-1])
+        
+        if (epoch > 1) and (np.abs((error_validation[-1] - error_validation[-2]))/error_validation[-2] < 0.005):
+            EPOCHS = epoch + 1
+            break;
 
 
-
+    plt.plot(range(EPOCHS), error_training, label='Error de training')
+    plt.plot(range(EPOCHS), error_validation, label='Error de validation')
+    plt.xlabel('Epochs')
+    plt.ylabel('Error promedio en desviaciones estándar')
+    
+    plt.legend()
 
     # ----- TEST -----
 
@@ -227,7 +229,7 @@ if __name__ == "__main__":
     
     k = 0
     print("\nTEST: ")
-    for j in range(INDEX_TRAIN + 1, INDEX_TEST):
+    for j in range(INDEX_VALID + 1, INDEX_TEST):
 
         k += 1
         xbc = data[j, :]
@@ -239,8 +241,9 @@ if __name__ == "__main__":
 
     print("error test", calc_rendimiento(np.array(t_obtenido), np.array(t_esperado), k))
 
-
-    # shufleo
     print(t_esperado[-1])
     print(t_obtenido[-1])
+    
+    plt.show()
+
 
