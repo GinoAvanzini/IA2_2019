@@ -1,13 +1,13 @@
 # Inteligencia Artificial 2
 
-Repositorio incluyendo los trabajos prácticos de la cátedra Inteligencia Artificial 2 de la carrera Ingeniería en Mecatrónica
+Repositorio con los trabajos prácticos de la cátedra Inteligencia Artificial 2 de la carrera Ingeniería en Mecatrónica.
 
-Ver los enunciados en [esta carpeta](docs/enunciados).
+Ver los enunciados en [esta carpeta](docs/enunciados). Los informes de cada trabajo se encuentran [aquí](docs/informes).
 
 Temas explorados:
-- TP 1 Búsqueda y optimización: A*, genetic algorithms, simulated annealing (temple simulado), backtracking algorithm para Constrain Satisfaction Problems (CSP)
-- TP 2 Razonamiento: knowledge base en PROLOG, fuzzy logic (lógica difusa), planning in PDDL using [fast downward](www.fast-downward.org/)
-- TP 3 Machine Learning: neural networks, multi-layer perceptron, Kohonen map
+- **TP 1 Búsqueda y optimización**: A*, genetic algorithms, simulated annealing (temple simulado), backtracking algorithm para Constrain Satisfaction Problems (CSP)
+- **TP 2 Razonamiento**: knowledge base en PROLOG, fuzzy logic (lógica difusa), planning en PDDL con [fast downward](www.fast-downward.org/)
+- **TP 3 Machine Learning**: neural networks, multi-layer perceptron, Kohonen map
 
 | ![Simulated annealing](/docs/output_23_0.png?raw=true) | 
 |:--:| 
